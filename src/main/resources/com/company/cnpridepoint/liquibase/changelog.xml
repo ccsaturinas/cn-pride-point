@@ -7,9 +7,16 @@
 
     <!-- DO NOT REMOVE. This is a master changelog that runs all other changelogs. -->
 
+    <property name="offsetDateTime.type" dbms="mysql" value="DATETIME"/>
     <include file="/io/jmix/data/liquibase/changelog.xml"/>
     <include file="/io/jmix/flowuidata/liquibase/changelog.xml"/>
     <include file="/io/jmix/securitydata/liquibase/changelog.xml"/>
+    <include file="/io/jmix/email/liquibase/changelog.xml"/>
+    <include file="/io/jmix/quartz/liquibase/changelog.xml"/>
+    <include file="/io/jmix/reports/liquibase/changelog.xml"/>
+    <include file="/io/jmix/authserver/liquibase/changelog.xml"/>
+    <include file="/io/jmix/search/liquibase/changelog.xml"/>
+    <include file="/io/jmix/messagetemplates/liquibase/changelog.xml"/>
 
     <includeAll path="/com/company/cnpridepoint/liquibase/changelog"/>
 
