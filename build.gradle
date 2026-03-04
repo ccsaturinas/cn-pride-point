@@ -36,7 +36,6 @@ dependencies {
     implementation 'io.jmix.appsettings:jmix-appsettings-flowui-starter'
     implementation 'io.jmix.gridexport:jmix-gridexport-flowui-starter'
     implementation 'io.jmix.charts:jmix-charts-flowui-starter'
-    implementation 'io.jmix.fullcalendar:jmix-fullcalendar-flowui-starter'
     implementation 'io.jmix.search:jmix-search-starter'
     implementation 'io.jmix.search:jmix-search-opensearch-starter'
     implementation 'io.jmix.search:jmix-search-flowui-starter'

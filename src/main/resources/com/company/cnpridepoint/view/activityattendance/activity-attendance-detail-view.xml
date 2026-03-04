@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<view xmlns="http://jmix.io/schema/flowui/view"
+      title="msg://activityAttendanceDetailView.title"
+      focusComponent="form">
+    <data>
+        <instance id="activityAttendanceDc"
+                  class="com.company.cnpridepoint.entity.ActivityAttendance">
+            <fetchPlan extends="_base">
+                <property name="activity" fetchPlan="_base"/>
+                <property name="attendee" fetchPlan="_base">
+                    <property name="yearLevel" fetchPlan="_base"/>
+                    <property name="section" fetchPlan="_base"/>
+                </property>
+            </fetchPlan>
+            <loader id="activityAttendanceDl"/>
+        </instance>
+    </data>
+    <facets>
+        <dataLoadCoordinator auto="true"/>
+    </facets>
+    <actions>
+        <action id="saveCloseAction" type="detail_saveClose"/>
+        <action id="closeAction" type="detail_close"/>
+    </actions>
+    <layout>
+        <formLayout id="form" dataContainer="activityAttendanceDc">
+            <responsiveSteps>
+                <responsiveStep minWidth="0" columns="1"/>
+                <responsiveStep minWidth="40em" columns="2"/>
+            </responsiveSteps>
+            <entityPicker id="activityField" property="activity">
+                <actions>
+                    <action id="entityLookupAction" type="entity_lookup"/>
+                    <action id="entityClearAction" type="entity_clear"/>
+                </actions>
+            </entityPicker>
+            <entityPicker id="attendeeField" property="attendee">
+                <actions>
+                    <action id="entityLookupAction" type="entity_lookup"/>
+                    <action id="entityClearAction" type="entity_clear"/>
+                </actions>
+            </entityPicker>
+            <dateTimePicker id="checkedInAtField" property="checkedInAt"/>
+            <dateTimePicker id="checkedOutAtField" property="checkedOutAt"/>
+            <select id="statusField" property="status"/>
+        </formLayout>
+        <hbox id="detailActions">
+            <button id="saveAndCloseButton" action="saveCloseAction"/>
+            <button id="closeButton" action="closeAction"/>
+        </hbox>
+    </layout>
+</view>

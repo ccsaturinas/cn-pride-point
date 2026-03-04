@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<view xmlns="http://jmix.io/schema/flowui/view"
+      xmlns:c="http://jmix.io/schema/flowui/jpql-condition"
+      title="msg://attendeeListView.title"
+      focusComponent="attendeesDataGrid">
+    <data>
+        <collection id="attendeesDc"
+                    class="com.company.cnpridepoint.entity.Attendee">
+            <fetchPlan extends="_base">
+                <property name="yearLevel" fetchPlan="_base"/>
+                <property name="section" fetchPlan="_base"/>
+            </fetchPlan>
+            <loader id="attendeesDl" readOnly="true">
+                <query>
+                    <![CDATA[select e from Attendee e]]>
+                </query>
+            </loader>
+        </collection>
+    </data>
+    <facets>
+        <dataLoadCoordinator auto="true"/>
+        <urlQueryParameters>
+            <genericFilter component="genericFilter"/>
+            <pagination component="pagination"/>
+        </urlQueryParameters>
+    </facets>
+    <actions>
+        <action id="selectAction" type="lookup_select"/>
+        <action id="discardAction" type="lookup_discard"/>
+    </actions>
+    <layout>
+        <genericFilter id="genericFilter"
+                       dataLoader="attendeesDl">
+            <properties include=".*"/>
+        </genericFilter>
+        <hbox id="buttonsPanel" classNames="buttons-panel">
+            <startSlot>
+                <button id="createButton" action="attendeesDataGrid.createAction"/>
+                <button id="editButton" action="attendeesDataGrid.editAction"/>
+                <button id="excelExportButton" action="attendeesDataGrid.excelExportAction"/>
+                <button id="removeButton" action="attendeesDataGrid.removeAction"/>
+            </startSlot>
+            <endSlot>
+                <simplePagination id="pagination" dataLoader="attendeesDl"/>
+            </endSlot>
+        </hbox>
+        <dataGrid id="attendeesDataGrid"
+                  width="100%"
+                  minHeight="20em"
+                  dataContainer="attendeesDc"
+                  columnReorderingAllowed="true">
+            <actions>
+                <action id="createAction" type="list_create"/>
+                <action id="editAction" type="list_edit"/>
+                <action id="excelExportAction" type="grdexp_excelExport"/>
+                <action id="removeAction" type="list_remove"/>
+            </actions>
+            <columns resizable="true">
+                <column property="code"/>
+                <column property="name"/>
+                <column property="birthdate"/>
+                <column property="gender"/>
+                <column property="attendeeType"/>
+                <column property="shirtSize"/>
+                <column property="yearLevel"/>
+                <column property="section"/>
+                <column property="displayName"/>
+            </columns>
+        </dataGrid>
+        <hbox id="lookupActions" visible="false">
+            <button id="selectButton" action="selectAction"/>
+            <button id="discardButton" action="discardAction"/>
+        </hbox>
+    </layout>
+</view>

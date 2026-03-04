@@ -3,6 +3,7 @@ package com.company.cnpridepoint.entity;
 import io.jmix.core.annotation.DeletedBy;
 import io.jmix.core.annotation.DeletedDate;
 import io.jmix.core.entity.annotation.JmixGeneratedValue;
+import io.jmix.core.metamodel.annotation.InstanceName;
 import io.jmix.core.metamodel.annotation.JmixEntity;
 import jakarta.persistence.*;
 import org.springframework.data.annotation.CreatedBy;
@@ -49,6 +50,18 @@ public class Section {
     @DeletedDate
     @Column(name = "DELETED_DATE")
     private OffsetDateTime deletedDate;
+
+    @InstanceName
+    @Column(name = "NAME")
+    private String name;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public OffsetDateTime getDeletedDate() {
         return deletedDate;

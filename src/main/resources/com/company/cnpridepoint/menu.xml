@@ -3,6 +3,12 @@
 
     <menu id="application" title="msg://com.company.cnpridepoint/menu.application.title" opened="true">
         <item view="User.list" title="msg://com.company.cnpridepoint.view.user/UserListView.title"/>
+        <item view="Activity.list" title="msg://com.company.cnpridepoint.view.activity/activityListView.title"/>
+        <item view="ActivityAttendance.list"
+              title="msg://com.company.cnpridepoint.view.activityattendance/activityAttendanceListView.title"/>
+        <item view="Attendee.list" title="msg://com.company.cnpridepoint.view.attendee/attendeeListView.title"/>
+        <item view="Section_.list" title="msg://com.company.cnpridepoint.view.section/sectionListView.title"/>
+        <item view="YearLevel.list" title="msg://com.company.cnpridepoint.view.yearlevel/yearLevelListView.title"/>
     </menu>
 
 </menu-config>
