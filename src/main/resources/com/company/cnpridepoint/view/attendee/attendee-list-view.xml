@@ -28,7 +28,7 @@
         <action id="selectAction" type="lookup_select"/>
         <action id="discardAction" type="lookup_discard"/>
     </actions>
-    <layout>
+    <layout spacing="false">
         <genericFilter id="genericFilter"
                        dataLoader="attendeesDl">
             <properties include=".*"/>
@@ -41,7 +41,8 @@
                 <button id="removeButton" action="attendeesDataGrid.removeAction"/>
             </startSlot>
             <endSlot>
-                <simplePagination id="pagination" dataLoader="attendeesDl"/>
+                <simplePagination id="pagination" dataLoader="attendeesDl" itemsPerPageVisible="true"/>
+                <gridColumnVisibility dataGrid="attendeesDataGrid" icon="vaadin:cog-o" themeNames="icon"/>
             </endSlot>
         </hbox>
         <dataGrid id="attendeesDataGrid"
@@ -56,19 +57,20 @@
                 <action id="removeAction" type="list_remove"/>
             </actions>
             <columns resizable="true">
-                <column property="code"/>
-                <column property="birthdate"/>
-                <column property="gender"/>
-                <column property="attendeeType"/>
-                <column property="shirtSize"/>
-                <column property="yearLevel"/>
-                <column property="section"/>
-                <column property="displayName"/>
-                <column property="profilePic"/>
-                <column property="lastName"/>
-                <column property="firstName"/>
-                <column property="middleName"/>
-                <column property="status"/>
+                <column property="profilePic" header="Profile" autoWidth="true"/>
+                <column property="displayName" header="Attendee" autoWidth="true"/>
+                <column property="code" autoWidth="true" visible="false"/>
+                <column property="firstName" autoWidth="true" visible="false"/>
+                <column property="lastName" autoWidth="true" visible="false"/>
+                <column property="middleName" autoWidth="true" visible="false"/>
+                <column property="birthdate" autoWidth="true"/>
+                <column property="age" autoWidth="true"/>
+                <column property="gender" autoWidth="true"/>
+                <column property="attendeeType" autoWidth="true"/>
+                <column property="shirtSize" autoWidth="true"/>
+                <column property="yearLevel" autoWidth="true"/>
+                <column property="section" autoWidth="true"/>
+                <column property="status" autoWidth="true"/>
             </columns>
         </dataGrid>
         <hbox id="lookupActions" visible="false">

@@ -18,6 +18,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
+import java.time.Period;
 import java.util.UUID;
 
 @JmixEntity
@@ -160,11 +161,21 @@ public class Attendee {
     @JmixProperty
     @DependsOnProperties({"code", "lastName", "firstName", "middleName"})
     public String getDisplayName() {
-       lastName = lastName == null ? "" : lastName.toUpperCase();
-       firstName = firstName == null ? "" : firstName.toUpperCase();
-       middleName = middleName == null ? "" : middleName.substring(0, 1).toUpperCase();
-        return String.format("%s - %s %s %s.", (code != null ? code : ""),
-                lastName,firstName,middleName).trim();
+       var ln = lastName == null ? "" : lastName.toUpperCase();
+       var fn = firstName == null ? "" : firstName.toUpperCase();
+       var mi = middleName == null ? "" : middleName.substring(0, 1).toUpperCase();
+       return String.format("%s - %s %s %s.", (code != null ? code : ""), ln, fn, mi).trim();
+    }
+
+    @Transient
+    @JmixProperty
+    @DependsOnProperties("birthdate")
+    public Integer getAge() {
+        var dateNow = LocalDate.now();
+        if (birthdate != null) {
+            return Period.between(birthdate, dateNow).getYears();
+        }
+        return 0;
     }
 
     public AttendeeType getAttendeeType() {

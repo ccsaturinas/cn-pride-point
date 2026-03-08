@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <view xmlns="http://jmix.io/schema/flowui/view"
+      xmlns:c="http://jmix.io/schema/flowui/jpql-condition"
       title="msg://attendeeDetailView.title"
       focusComponent="form">
     <data>
@@ -11,6 +12,32 @@
             </fetchPlan>
             <loader id="attendeeDl"/>
         </instance>
+        <collection id="yearLevelDc" class="com.company.cnpridepoint.entity.YearLevel">
+            <fetchPlan extends="_base"/>
+            <loader id="yearLevelDl">
+                <query>
+                    <![CDATA[select e from YearLevel e]]>
+                    <condition>
+                        <c:jpql>
+                            <c:where>e.status = :status</c:where>
+                        </c:jpql>
+                    </condition>
+                </query>
+            </loader>
+        </collection>
+        <collection id="sectionDc" class="com.company.cnpridepoint.entity.Section">
+            <fetchPlan extends="_base"/>
+            <loader id="sectionDl">
+                <query>
+                    <![CDATA[select e from Section_ e]]>
+                    <condition>
+                        <c:jpql>
+                            <c:where>e.status = :status</c:where>
+                        </c:jpql>
+                    </condition>
+                </query>
+            </loader>
+        </collection>
     </data>
     <facets>
         <dataLoadCoordinator auto="true"/>
@@ -25,28 +52,62 @@
                 <responsiveStep minWidth="0" columns="1"/>
                 <responsiveStep minWidth="40em" columns="2"/>
             </responsiveSteps>
-            <textField id="codeField" property="code"/>
-            <datePicker id="birthdateField" property="birthdate"/>
-            <select id="genderField" property="gender"/>
-            <select id="attendeeTypeField" property="attendeeType"/>
-            <select id="shirtSizeField" property="shirtSize"/>
-            <entityPicker id="yearLevelField" property="yearLevel">
-                <actions>
-                    <action id="entityLookupAction" type="entity_lookup"/>
-                    <action id="entityClearAction" type="entity_clear"/>
-                </actions>
-            </entityPicker>
-            <entityPicker id="sectionField" property="section">
-                <actions>
-                    <action id="entityLookupAction" type="entity_lookup"/>
-                    <action id="entityClearAction" type="entity_clear"/>
-                </actions>
-            </entityPicker>
-            <fileStorageUploadField id="profilePicField" property="profilePic"/>
+            <hbox spacing="true" margin="false" padding="false" width="100%">
+                <select id="attendeeTypeField" width="100%"
+                        label="msg://com.company.cnpridepoint.entity/AttendeeType"
+                        dataContainer="attendeeDc" property="attendeeType"/>
+                <textField id="codeField" width="100%"
+                           label="msg://com.company.cnpridepoint.entity/Attendee.code"
+                           dataContainer="attendeeDc" property="code"/>
+            </hbox>
             <textField id="lastNameField" property="lastName"/>
             <textField id="firstNameField" property="firstName"/>
             <textField id="middleNameField" property="middleName"/>
-            <select id="statusField" property="status"/>
+            <select id="genderField" width="100%"
+                    dataContainer="attendeeDc" property="gender"/>
+            <hbox spacing="true" margin="false" padding="false" width="100%">
+                <datePicker id="birthdateField" width="100%"
+                            label="msg://com.company.cnpridepoint.entity/Attendee.birthdate"
+                            dataContainer="attendeeDc" property="birthdate"/>
+                <textField id="ageField" width="100%" readOnly="true"
+                           label="msg://com.company.cnpridepoint.entity/Attendee.age"
+                           dataContainer="attendeeDc" property="age"/>
+            </hbox>
+            <hbox spacing="true" margin="false" padding="false" width="100%">
+                <entityComboBox id="yearLevelField" width="100%" itemsContainer="yearLevelDc"
+                                label="msg://com.company.cnpridepoint.entity/Attendee.yearLevel"
+                                dataContainer="attendeeDc" property="yearLevel">
+                    <actions>
+                        <!--                        <action id="entityLookupAction" type="entity_lookup"/>-->
+                        <action id="entityClearAction" type="entity_clear"/>
+                    </actions>
+                </entityComboBox>
+                <entityComboBox id="sectionField" width="100%" itemsContainer="sectionDc"
+                                label="msg://com.company.cnpridepoint.entity/Attendee.section"
+                                dataContainer="attendeeDc" property="section">
+                    <actions>
+                        <!--                        <action id="entityLookupAction" type="entity_lookup"/>-->
+                        <action id="entityClearAction" type="entity_clear"/>
+                    </actions>
+                </entityComboBox>
+            </hbox>
+            <hbox spacing="true" margin="false" padding="false" width="100%">
+                <select id="shirtSizeField" width="100%"
+                        label="msg://com.company.cnpridepoint.entity/Attendee.shirtSize"
+                        dataContainer="attendeeDc" property="shirtSize"/>
+                <select id="statusField" width="100%"
+                        label="msg://com.company.cnpridepoint.entity/Attendee.status"
+                        dataContainer="attendeeDc" property="status"/>
+            </hbox>
+            <vbox spacing="false" margin="false" padding="false">
+                <hbox spacing="true" margin="false" padding="false" alignItems="CENTER">
+                    <h5 text="msg://com.company.cnpridepoint.entity/Attendee.profilePic"/>
+                    <fileStorageUploadField id="profilePicField" dataContainer="attendeeDc" property="profilePic"/>
+                </hbox>
+                <image id="profilePicImage" dataContainer="attendeeDc" property="profilePic"
+                       height="20em" width="20em" themeNames="contain" alignSelf="CENTER"
+                       whiteSpace="PRE_WRAP"/>
+            </vbox>
         </formLayout>
         <hbox id="detailActions">
             <button id="saveAndCloseButton" action="saveCloseAction"/>

@@ -12,22 +12,25 @@
         <dataLoadCoordinator auto="true"/>
     </facets>
     <actions>
-        <action id="saveCloseAction" type="detail_saveClose"/>
-        <action id="closeAction" type="detail_close"/>
+<!--        <action id="saveCloseAction" type="detail_saveClose"/>-->
+        <action id="closeAction" type="detail_close" shortcutCombination="ESCAPE"/>
     </actions>
-    <layout>
+    <layout spacing="false" alignItems="CENTER">
+        <h3 dataContainer="profileDataDc" property="name"/>
+        <image id="profilePicImage" dataContainer="profileDataDc" property="profilePic"
+               height="20em" width="20em" themeNames="contain" alignSelf="CENTER" whiteSpace="PRE_WRAP"/>
         <formLayout id="form" dataContainer="profileDataDc">
             <responsiveSteps>
                 <responsiveStep minWidth="0" columns="1"/>
                 <responsiveStep minWidth="40em" columns="2"/>
             </responsiveSteps>
-            <textField id="nameField" property="name"/>
-            <fileStorageUploadField id="profilePicField" clearButtonVisible="true" fileNameVisible="true"
-                                    property="profilePic"/>
+<!--            <textField id="nameField" property="name"/>-->
+<!--            <fileStorageUploadField id="profilePicField" clearButtonVisible="true" fileNameVisible="true"-->
+<!--                                    property="profilePic"/>-->
         </formLayout>
         <hbox id="detailActions">
-            <button id="saveAndCloseButton" action="saveCloseAction"/>
-            <button id="closeButton" action="closeAction"/>
+<!--            <button id="saveAndCloseButton" action="saveCloseAction"/>-->
+<!--            <button id="closeButton" action="closeAction"/>-->
         </hbox>
     </layout>
 </view>
