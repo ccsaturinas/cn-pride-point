@@ -24,10 +24,17 @@
                 <responsiveStep minWidth="40em" columns="2"/>
             </responsiveSteps>
             <textField id="nameField" property="name"/>
+            <hbox id="activityTypeBox" spacing="true" margin="false" padding="false">
+                <select id="activityTypeField" width="100%"
+                        label="msg://com.company.cnpridepoint.entity/ActivityType"
+                        dataContainer="activityDc" property="activityType"/>
+                <select id="statusField" width="100%"
+                        label="msg://com.company.cnpridepoint.entity/Activity.status"
+                        dataContainer="activityDc" property="status"/>
+            </hbox>
             <dateTimePicker id="startDateField" property="startDate"/>
             <dateTimePicker id="endDateField" property="endDate"/>
-            <select id="activityTypeField" property="activityType"/>
-            <select id="statusField" property="status"/>
+            <textArea id="detailsField" property="details"/>
         </formLayout>
         <hbox id="detailActions">
             <button id="saveAndCloseButton" action="saveCloseAction"/>

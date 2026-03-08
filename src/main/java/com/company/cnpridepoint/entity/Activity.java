@@ -68,6 +68,18 @@ public class Activity {
     @Column(name = "STATUS")
     private String status;
 
+    @Column(name = "DETAILS")
+    @Lob
+    private String details;
+
+    public String getDetails() {
+        return details;
+    }
+
+    public void setDetails(String details) {
+        this.details = details;
+    }
+
     public Status getStatus() {
         return status == null ? null : Status.fromId(status);
     }
