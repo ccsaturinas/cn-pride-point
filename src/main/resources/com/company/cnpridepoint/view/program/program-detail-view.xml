@@ -23,11 +23,25 @@
                 <responsiveStep minWidth="40em" columns="2"/>
             </responsiveSteps>
             <textField id="nameField" property="name"/>
-            <select id="typeField" property="type"/>
-            <datePicker id="startDateField" property="startDate"/>
-            <datePicker id="endDateField" property="endDate"/>
+            <hbox id="dateBox" spacing="true" margin="false" padding="false" width="100%">
+                <datePicker id="startDateField" width="100%"
+                            dateFormat="msg://com.company.cnpridepoint/dateFieldFormat"
+                            label="msg://com.company.cnpridepoint.entity/Program.startDate"
+                            property="startDate" dataContainer="programDc"/>
+                <datePicker id="endDateField" width="100%"
+                            dateFormat="msg://com.company.cnpridepoint/dateFieldFormat"
+                            label="msg://com.company.cnpridepoint.entity/Program.endDate"
+                            property="endDate" dataContainer="programDc"/>
+            </hbox>
+            <hbox id="typeBox" spacing="true" margin="false" padding="false" width="100%">
+                <select id="typeField" width="100%"
+                        label="msg://com.company.cnpridepoint.entity/Program.type"
+                        property="type" dataContainer="programDc"/>
+                <select id="statusField" width="100%"
+                        label="msg://com.company.cnpridepoint.entity/Program.status"
+                        property="status" dataContainer="programDc"/>
+            </hbox>
             <textArea id="otherDetailsField" height="9.5em" property="otherDetails"/>
-            <select id="statusField" property="status"/>
         </formLayout>
         <hbox id="detailActions">
             <button id="saveAndCloseButton" action="saveCloseAction"/>
