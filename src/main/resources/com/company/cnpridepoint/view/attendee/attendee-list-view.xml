@@ -39,6 +39,7 @@
                 <button id="editButton" action="attendeesDataGrid.editAction"/>
                 <button id="excelExportButton" action="attendeesDataGrid.excelExportAction"/>
                 <button id="removeButton" action="attendeesDataGrid.removeAction"/>
+                <fileUploadField id="importExcel" acceptedFileTypes=".xlsx"/>
             </startSlot>
             <endSlot>
                 <simplePagination id="pagination" dataLoader="attendeesDl" itemsPerPageVisible="true"/>
