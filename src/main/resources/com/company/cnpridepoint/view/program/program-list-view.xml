@@ -54,12 +54,8 @@
             <columns resizable="true">
                 <column property="name" autoWidth="true"/>
                 <column property="type" autoWidth="true"/>
-                <column property="startDate" autoWidth="true">
-                    <localDateRenderer format="msg://com.company.cnpridepoint/dateFormat"/>
-                </column>
-                <column property="endDate" autoWidth="true">
-                    <localDateRenderer format="msg://com.company.cnpridepoint/dateFormat"/>
-                </column>
+                <column property="startDate" autoWidth="true"/>
+                <column property="endDate" autoWidth="true"/>
                 <column property="status" autoWidth="true"/>
                 <column property="otherDetails"/>
             </columns>

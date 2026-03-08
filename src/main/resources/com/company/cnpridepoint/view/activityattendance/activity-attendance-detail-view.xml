@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <view xmlns="http://jmix.io/schema/flowui/view"
+      xmlns:c="http://jmix.io/schema/flowui/jpql-condition"
       title="msg://activityAttendanceDetailView.title"
       focusComponent="form">
     <data>
         <instance id="activityAttendanceDc"
                   class="com.company.cnpridepoint.entity.ActivityAttendance">
             <fetchPlan extends="_base">
+                <property name="program" fetchPlan="_base"/>
                 <property name="activity" fetchPlan="_base"/>
                 <property name="attendee" fetchPlan="_base">
                     <property name="yearLevel" fetchPlan="_base"/>
@@ -13,10 +15,74 @@
                 </property>
                 <property name="yearLevel" fetchPlan="_base"/>
                 <property name="section" fetchPlan="_base"/>
-                <property name="program" fetchPlan="_base"/>
             </fetchPlan>
             <loader id="activityAttendanceDl"/>
         </instance>
+        <collection id="programsDc" class="com.company.cnpridepoint.entity.Program">
+            <fetchPlan extends="_base"/>
+            <loader id="programsDl">
+                <query>
+                    <![CDATA[select e from Program e]]>
+                    <condition>
+                        <c:jpql>
+                            <c:where>e.status = :status</c:where>
+                        </c:jpql>
+                    </condition>
+                </query>
+            </loader>
+        </collection>
+        <collection id="activitiesDc" class="com.company.cnpridepoint.entity.Activity">
+            <fetchPlan extends="_base"/>
+            <loader id="activitiesDl">
+                <query>
+                    <![CDATA[select e from Activity e]]>
+                    <condition>
+                        <c:jpql>
+                            <c:where>e.status = :status</c:where>
+                        </c:jpql>
+                    </condition>
+                </query>
+            </loader>
+        </collection>
+        <collection id="attendeesDc" class="com.company.cnpridepoint.entity.Attendee">
+            <fetchPlan extends="_base"/>
+            <loader id="attendeesDl">
+                <query>
+                    <![CDATA[select e from Attendee e]]>
+                    <condition>
+                        <c:jpql>
+                            <c:where>e.status = :status</c:where>
+                        </c:jpql>
+                    </condition>
+                </query>
+            </loader>
+        </collection>
+        <collection id="yearLevelsDc" class="com.company.cnpridepoint.entity.YearLevel">
+            <fetchPlan extends="_base"/>
+            <loader id="yearLevelsDl">
+                <query>
+                    <![CDATA[select e from YearLevel e]]>
+                    <condition>
+                        <c:jpql>
+                            <c:where>e.status = :status</c:where>
+                        </c:jpql>
+                    </condition>
+                </query>
+            </loader>
+        </collection>
+        <collection id="sectionsDc" class="com.company.cnpridepoint.entity.Section">
+            <fetchPlan extends="_base"/>
+            <loader id="sectionsDl">
+                <query>
+                    <![CDATA[select e from Section_ e]]>
+                    <condition>
+                        <c:jpql>
+                            <c:where>e.status = :status</c:where>
+                        </c:jpql>
+                    </condition>
+                </query>
+            </loader>
+        </collection>
     </data>
     <facets>
         <dataLoadCoordinator auto="true"/>
@@ -31,39 +97,56 @@
                 <responsiveStep minWidth="0" columns="1"/>
                 <responsiveStep minWidth="40em" columns="2"/>
             </responsiveSteps>
-            <entityPicker id="activityField" property="activity">
+            <entityComboBox id="programField" itemsContainer="programsDc" property="program">
                 <actions>
-                    <action id="entityLookupAction" type="entity_lookup"/>
+<!--                    <action id="entityLookupAction" type="entity_lookup"/>-->
                     <action id="entityClearAction" type="entity_clear"/>
                 </actions>
-            </entityPicker>
-            <entityPicker id="attendeeField" property="attendee">
+            </entityComboBox>
+            <entityComboBox id="activityField" itemsContainer="activitiesDc" property="activity">
                 <actions>
-                    <action id="entityLookupAction" type="entity_lookup"/>
+<!--                    <action id="entityLookupAction" type="entity_lookup"/>-->
                     <action id="entityClearAction" type="entity_clear"/>
                 </actions>
-            </entityPicker>
+            </entityComboBox>
             <dateTimePicker id="checkedInAtField" property="checkedInAt"/>
             <dateTimePicker id="checkedOutAtField" property="checkedOutAt"/>
-            <select id="statusField" property="status"/>
-            <entityPicker id="yearLevelField" property="yearLevel">
+            <entityComboBox id="attendeeField" width="100%"
+                          itemsContainer="attendeesDc"
+                          dataContainer="activityAttendanceDc" property="attendee">
                 <actions>
-                    <action id="entityLookupAction" type="entity_lookup"/>
+<!--                    <action id="entityLookupAction" type="entity_lookup"/>-->
                     <action id="entityClearAction" type="entity_clear"/>
                 </actions>
-            </entityPicker>
-            <entityPicker id="sectionField" property="section">
-                <actions>
-                    <action id="entityLookupAction" type="entity_lookup"/>
-                    <action id="entityClearAction" type="entity_clear"/>
-                </actions>
-            </entityPicker>
-            <entityPicker id="programField" property="program">
-                <actions>
-                    <action id="entityLookupAction" type="entity_lookup"/>
-                    <action id="entityClearAction" type="entity_clear"/>
-                </actions>
-            </entityPicker>
+            </entityComboBox>
+            <hbox spacing="true" margin="false" padding="false" width="100%">
+                <select id="statusField" width="100%"
+                        label="msg://com.company.cnpridepoint.entity/ActivityAttendance.status"
+                        dataContainer="activityAttendanceDc" property="status"/>
+                <select id="attendeeTypeField" width="100%"
+                        label="msg://com.company.cnpridepoint.entity/AttendeeType"
+                        dataContainer="activityAttendanceDc" property="attendeeType"/>
+            </hbox>
+            <hbox spacing="true" margin="false" padding="false" width="100%">
+                <entityComboBox id="yearLevelField" width="100%" itemsContainer="yearLevelsDc"
+                              label="msg://com.company.cnpridepoint.entity/ActivityAttendance.yearLevel"
+                              dataContainer="activityAttendanceDc" property="yearLevel">
+                    <actions>
+<!--                        <action id="entityLookupAction" type="entity_lookup"/>-->
+                        <action id="entityClearAction" type="entity_clear"/>
+                    </actions>
+                </entityComboBox>
+                <entityComboBox id="sectionField" width="100%" itemsContainer="sectionsDc"
+                                label="msg://com.company.cnpridepoint.entity/ActivityAttendance.section"
+                                dataContainer="activityAttendanceDc" property="section">
+                    <actions>
+<!--                        <action id="entityLookupAction" type="entity_lookup"/>-->
+                        <action id="entityClearAction" type="entity_clear"/>
+                    </actions>
+                </entityComboBox>
+
+            </hbox>
+
         </formLayout>
         <hbox id="detailActions">
             <button id="saveAndCloseButton" action="saveCloseAction"/>

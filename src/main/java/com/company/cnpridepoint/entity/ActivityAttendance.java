@@ -73,10 +73,19 @@ public class ActivityAttendance {
     @ManyToOne(fetch = FetchType.LAZY)
     private Activity activity;
 
+    @Column(name = "CHECKED_IN_AT")
+    private LocalDateTime checkedInAt;
+
+    @Column(name = "CHECKED_OUT_AT")
+    private LocalDateTime checkedOutAt;
+
     @OnDelete(DeletePolicy.UNLINK)
     @JoinColumn(name = "ATTENDEE_ID")
     @ManyToOne(fetch = FetchType.LAZY)
     private Attendee attendee;
+
+    @Column(name = "ATTENDEE_TYPE")
+    private String attendeeType;
 
     @OnDeleteInverse(DeletePolicy.UNLINK)
     @JoinColumn(name = "YEAR_LEVEL_ID")
@@ -88,14 +97,16 @@ public class ActivityAttendance {
     @ManyToOne(fetch = FetchType.LAZY)
     private Section section;
 
-    @Column(name = "CHECKED_IN_AT")
-    private LocalDateTime checkedInAt;
-
-    @Column(name = "CHECKED_OUT_AT")
-    private LocalDateTime checkedOutAt;
-
     @Column(name = "STATUS")
     private String status;
+
+    public AttendeeType getAttendeeType() {
+        return attendeeType == null ? null : AttendeeType.fromId(attendeeType);
+    }
+
+    public void setAttendeeType(AttendeeType attendeeType) {
+        this.attendeeType = attendeeType == null ? null : attendeeType.getId();
+    }
 
     public Program getProgram() {
         return program;

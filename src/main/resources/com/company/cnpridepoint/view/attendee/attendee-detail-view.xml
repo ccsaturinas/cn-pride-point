@@ -12,9 +12,9 @@
             </fetchPlan>
             <loader id="attendeeDl"/>
         </instance>
-        <collection id="yearLevelDc" class="com.company.cnpridepoint.entity.YearLevel">
+        <collection id="yearLevelsDc" class="com.company.cnpridepoint.entity.YearLevel">
             <fetchPlan extends="_base"/>
-            <loader id="yearLevelDl">
+            <loader id="yearLevelsDl">
                 <query>
                     <![CDATA[select e from YearLevel e]]>
                     <condition>
@@ -25,9 +25,9 @@
                 </query>
             </loader>
         </collection>
-        <collection id="sectionDc" class="com.company.cnpridepoint.entity.Section">
+        <collection id="sectionsDc" class="com.company.cnpridepoint.entity.Section">
             <fetchPlan extends="_base"/>
-            <loader id="sectionDl">
+            <loader id="sectionsDl">
                 <query>
                     <![CDATA[select e from Section_ e]]>
                     <condition>
@@ -44,7 +44,7 @@
     </facets>
     <actions>
         <action id="saveCloseAction" type="detail_saveClose"/>
-        <action id="closeAction" type="detail_close"/>
+        <action id="closeAction" type="detail_close" shortcutCombination="ESCAPE"/>
     </actions>
     <layout>
         <formLayout id="form" dataContainer="attendeeDc">
@@ -74,7 +74,7 @@
                            dataContainer="attendeeDc" property="age"/>
             </hbox>
             <hbox spacing="true" margin="false" padding="false" width="100%">
-                <entityComboBox id="yearLevelField" width="100%" itemsContainer="yearLevelDc"
+                <entityComboBox id="yearLevelField" width="100%" itemsContainer="yearLevelsDc"
                                 label="msg://com.company.cnpridepoint.entity/Attendee.yearLevel"
                                 dataContainer="attendeeDc" property="yearLevel">
                     <actions>
@@ -82,7 +82,7 @@
                         <action id="entityClearAction" type="entity_clear"/>
                     </actions>
                 </entityComboBox>
-                <entityComboBox id="sectionField" width="100%" itemsContainer="sectionDc"
+                <entityComboBox id="sectionField" width="100%" itemsContainer="sectionsDc"
                                 label="msg://com.company.cnpridepoint.entity/Attendee.section"
                                 dataContainer="attendeeDc" property="section">
                     <actions>
@@ -102,7 +102,8 @@
             <vbox spacing="false" margin="false" padding="false">
                 <hbox spacing="true" margin="false" padding="false" alignItems="CENTER">
                     <h5 text="msg://com.company.cnpridepoint.entity/Attendee.profilePic"/>
-                    <fileStorageUploadField id="profilePicField" dataContainer="attendeeDc" property="profilePic"/>
+                    <fileStorageUploadField id="profilePicField" fileStoragePutMode="MANUAL"
+                                            dataContainer="attendeeDc" property="profilePic"/>
                 </hbox>
                 <image id="profilePicImage" dataContainer="attendeeDc" property="profilePic"
                        height="20em" width="20em" themeNames="contain" alignSelf="CENTER"

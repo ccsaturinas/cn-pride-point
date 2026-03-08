@@ -25,11 +25,9 @@
             <textField id="nameField" property="name"/>
             <hbox id="dateBox" spacing="true" margin="false" padding="false" width="100%">
                 <datePicker id="startDateField" width="100%"
-                            dateFormat="msg://com.company.cnpridepoint/dateFieldFormat"
                             label="msg://com.company.cnpridepoint.entity/Program.startDate"
                             property="startDate" dataContainer="programDc"/>
                 <datePicker id="endDateField" width="100%"
-                            dateFormat="msg://com.company.cnpridepoint/dateFieldFormat"
                             label="msg://com.company.cnpridepoint.entity/Program.endDate"
                             property="endDate" dataContainer="programDc"/>
             </hbox>
