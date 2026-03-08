@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <view xmlns="http://jmix.io/schema/flowui/view"
-      title="msg://activityDetailView.title"
+      title="msg://programDetailView.title"
       focusComponent="form">
     <data>
-        <instance id="activityDc"
-                  class="com.company.cnpridepoint.entity.Activity">
-            <fetchPlan extends="_base">
-            </fetchPlan>
-            <loader id="activityDl"/>
+        <instance id="programDc"
+                  class="com.company.cnpridepoint.entity.Program">
+            <fetchPlan extends="_base"/>
+            <loader id="programDl"/>
         </instance>
     </data>
     <facets>
@@ -18,15 +17,16 @@
         <action id="closeAction" type="detail_close"/>
     </actions>
     <layout>
-        <formLayout id="form" dataContainer="activityDc">
+        <formLayout id="form" dataContainer="programDc">
             <responsiveSteps>
                 <responsiveStep minWidth="0" columns="1"/>
                 <responsiveStep minWidth="40em" columns="2"/>
             </responsiveSteps>
             <textField id="nameField" property="name"/>
-            <dateTimePicker id="startDateField" property="startDate"/>
-            <dateTimePicker id="endDateField" property="endDate"/>
-            <select id="activityTypeField" property="activityType"/>
+            <select id="typeField" property="type"/>
+            <datePicker id="startDateField" property="startDate"/>
+            <datePicker id="endDateField" property="endDate"/>
+            <textArea id="otherDetailsField" height="9.5em" property="otherDetails"/>
             <select id="statusField" property="status"/>
         </formLayout>
         <hbox id="detailActions">

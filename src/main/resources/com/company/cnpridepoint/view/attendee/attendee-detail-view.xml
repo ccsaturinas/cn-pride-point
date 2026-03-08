@@ -26,7 +26,6 @@
                 <responsiveStep minWidth="40em" columns="2"/>
             </responsiveSteps>
             <textField id="codeField" property="code"/>
-            <textField id="nameField" property="name"/>
             <datePicker id="birthdateField" property="birthdate"/>
             <select id="genderField" property="gender"/>
             <select id="attendeeTypeField" property="attendeeType"/>
@@ -43,7 +42,11 @@
                     <action id="entityClearAction" type="entity_clear"/>
                 </actions>
             </entityPicker>
-            <textField id="displayNameField" property="displayName"/>
+            <fileStorageUploadField id="profilePicField" property="profilePic"/>
+            <textField id="lastNameField" property="lastName"/>
+            <textField id="firstNameField" property="firstName"/>
+            <textField id="middleNameField" property="middleName"/>
+            <select id="statusField" property="status"/>
         </formLayout>
         <hbox id="detailActions">
             <button id="saveAndCloseButton" action="saveCloseAction"/>

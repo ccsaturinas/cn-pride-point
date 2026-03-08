@@ -55,6 +55,17 @@ public class YearLevel {
     @Column(name = "NAME")
     private String name;
 
+    @Column(name = "STATUS")
+    private String status;
+
+    public Status getStatus() {
+        return status == null ? null : Status.fromId(status);
+    }
+
+    public void setStatus(Status status) {
+        this.status = status == null ? null : status.getId();
+    }
+
     public String getName() {
         return name;
     }

@@ -6,7 +6,8 @@
     <data>
         <collection id="activitiesDc"
                     class="com.company.cnpridepoint.entity.Activity">
-            <fetchPlan extends="_base"/>
+            <fetchPlan extends="_base">
+            </fetchPlan>
             <loader id="activitiesDl" readOnly="true">
                 <query>
                     <![CDATA[select e from Activity e]]>
@@ -59,6 +60,7 @@
                 <column property="startDate"/>
                 <column property="endDate"/>
                 <column property="activityType"/>
+                <column property="status"/>
             </columns>
         </dataGrid>
         <hbox id="lookupActions" visible="false">

@@ -9,6 +9,9 @@
             <fetchPlan extends="_base">
                 <property name="activity" fetchPlan="_base"/>
                 <property name="attendee" fetchPlan="_base"/>
+                <property name="yearLevel" fetchPlan="_base"/>
+                <property name="section" fetchPlan="_base"/>
+                <property name="program" fetchPlan="_base"/>
             </fetchPlan>
             <loader id="activityAttendancesDl" readOnly="true">
                 <query>
@@ -63,6 +66,9 @@
                 <column property="checkedInAt"/>
                 <column property="checkedOutAt"/>
                 <column property="status"/>
+                <column property="yearLevel"/>
+                <column property="section"/>
+                <column property="program"/>
             </columns>
         </dataGrid>
         <hbox id="lookupActions" visible="false">

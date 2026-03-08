@@ -11,6 +11,9 @@
                     <property name="yearLevel" fetchPlan="_base"/>
                     <property name="section" fetchPlan="_base"/>
                 </property>
+                <property name="yearLevel" fetchPlan="_base"/>
+                <property name="section" fetchPlan="_base"/>
+                <property name="program" fetchPlan="_base"/>
             </fetchPlan>
             <loader id="activityAttendanceDl"/>
         </instance>
@@ -43,6 +46,24 @@
             <dateTimePicker id="checkedInAtField" property="checkedInAt"/>
             <dateTimePicker id="checkedOutAtField" property="checkedOutAt"/>
             <select id="statusField" property="status"/>
+            <entityPicker id="yearLevelField" property="yearLevel">
+                <actions>
+                    <action id="entityLookupAction" type="entity_lookup"/>
+                    <action id="entityClearAction" type="entity_clear"/>
+                </actions>
+            </entityPicker>
+            <entityPicker id="sectionField" property="section">
+                <actions>
+                    <action id="entityLookupAction" type="entity_lookup"/>
+                    <action id="entityClearAction" type="entity_clear"/>
+                </actions>
+            </entityPicker>
+            <entityPicker id="programField" property="program">
+                <actions>
+                    <action id="entityLookupAction" type="entity_lookup"/>
+                    <action id="entityClearAction" type="entity_clear"/>
+                </actions>
+            </entityPicker>
         </formLayout>
         <hbox id="detailActions">
             <button id="saveAndCloseButton" action="saveCloseAction"/>

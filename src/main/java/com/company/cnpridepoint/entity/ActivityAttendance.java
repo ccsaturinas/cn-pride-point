@@ -1,10 +1,14 @@
 package com.company.cnpridepoint.entity;
 
 import io.jmix.core.DeletePolicy;
+import io.jmix.core.MetadataTools;
 import io.jmix.core.annotation.DeletedBy;
 import io.jmix.core.annotation.DeletedDate;
 import io.jmix.core.entity.annotation.JmixGeneratedValue;
 import io.jmix.core.entity.annotation.OnDelete;
+import io.jmix.core.entity.annotation.OnDeleteInverse;
+import io.jmix.core.metamodel.annotation.DependsOnProperties;
+import io.jmix.core.metamodel.annotation.InstanceName;
 import io.jmix.core.metamodel.annotation.JmixEntity;
 import jakarta.persistence.*;
 import org.springframework.data.annotation.CreatedBy;
@@ -19,7 +23,10 @@ import java.util.UUID;
 @JmixEntity
 @Table(name = "ACTIVITY_ATTENDANCE", indexes = {
         @Index(name = "IDX_ACTIVITY_ATTENDANCE_ACTIVITY", columnList = "ACTIVITY_ID"),
-        @Index(name = "IDX_ACTIVITY_ATTENDANCE_ATTENDEE", columnList = "ATTENDEE_ID")
+        @Index(name = "IDX_ACTIVITY_ATTENDANCE_ATTENDEE", columnList = "ATTENDEE_ID"),
+        @Index(name = "IDX_ACTIVITY_ATTENDANCE_YEAR_LEVEL", columnList = "YEAR_LEVEL_ID"),
+        @Index(name = "IDX_ACTIVITY_ATTENDANCE_SECTION", columnList = "SECTION_ID"),
+        @Index(name = "IDX_ACTIVITY_ATTENDANCE_PROGRAM", columnList = "PROGRAM_ID")
 })
 @Entity
 public class ActivityAttendance {
@@ -56,6 +63,11 @@ public class ActivityAttendance {
     @Column(name = "DELETED_DATE")
     private OffsetDateTime deletedDate;
 
+    @OnDeleteInverse(DeletePolicy.CASCADE)
+    @JoinColumn(name = "PROGRAM_ID")
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Program program;
+
     @OnDelete(DeletePolicy.UNLINK)
     @JoinColumn(name = "ACTIVITY_ID")
     @ManyToOne(fetch = FetchType.LAZY)
@@ -66,6 +78,16 @@ public class ActivityAttendance {
     @ManyToOne(fetch = FetchType.LAZY)
     private Attendee attendee;
 
+    @OnDeleteInverse(DeletePolicy.UNLINK)
+    @JoinColumn(name = "YEAR_LEVEL_ID")
+    @ManyToOne(fetch = FetchType.LAZY)
+    private YearLevel yearLevel;
+
+    @OnDeleteInverse(DeletePolicy.UNLINK)
+    @JoinColumn(name = "SECTION_ID")
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Section section;
+
     @Column(name = "CHECKED_IN_AT")
     private LocalDateTime checkedInAt;
 
@@ -74,6 +96,30 @@ public class ActivityAttendance {
 
     @Column(name = "STATUS")
     private String status;
+
+    public Program getProgram() {
+        return program;
+    }
+
+    public void setProgram(Program program) {
+        this.program = program;
+    }
+
+    public Section getSection() {
+        return section;
+    }
+
+    public void setSection(Section section) {
+        this.section = section;
+    }
+
+    public YearLevel getYearLevel() {
+        return yearLevel;
+    }
+
+    public void setYearLevel(YearLevel yearLevel) {
+        this.yearLevel = yearLevel;
+    }
 
     public AttendanceStatus getStatus() {
         return status == null ? null : AttendanceStatus.fromId(status);
@@ -179,4 +225,11 @@ public class ActivityAttendance {
         this.id = id;
     }
 
+    @InstanceName
+    @DependsOnProperties({"program", "activity"})
+    public String getInstanceName(MetadataTools metadataTools) {
+        return String.format("%s %s",
+                metadataTools.format(program),
+                metadataTools.format(activity));
+    }
 }

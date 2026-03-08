@@ -1,18 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <view xmlns="http://jmix.io/schema/flowui/view"
       xmlns:c="http://jmix.io/schema/flowui/jpql-condition"
-      title="msg://attendeeListView.title"
-      focusComponent="attendeesDataGrid">
+      title="msg://programListView.title"
+      focusComponent="programsDataGrid">
     <data>
-        <collection id="attendeesDc"
-                    class="com.company.cnpridepoint.entity.Attendee">
-            <fetchPlan extends="_base">
-                <property name="yearLevel" fetchPlan="_base"/>
-                <property name="section" fetchPlan="_base"/>
-            </fetchPlan>
-            <loader id="attendeesDl" readOnly="true">
+        <collection id="programsDc"
+                    class="com.company.cnpridepoint.entity.Program">
+            <fetchPlan extends="_base"/>
+            <loader id="programsDl" readOnly="true">
                 <query>
-                    <![CDATA[select e from Attendee e]]>
+                    <![CDATA[select e from Program e]]>
                 </query>
             </loader>
         </collection>
@@ -30,24 +27,24 @@
     </actions>
     <layout>
         <genericFilter id="genericFilter"
-                       dataLoader="attendeesDl">
+                       dataLoader="programsDl">
             <properties include=".*"/>
         </genericFilter>
         <hbox id="buttonsPanel" classNames="buttons-panel">
             <startSlot>
-                <button id="createButton" action="attendeesDataGrid.createAction"/>
-                <button id="editButton" action="attendeesDataGrid.editAction"/>
-                <button id="excelExportButton" action="attendeesDataGrid.excelExportAction"/>
-                <button id="removeButton" action="attendeesDataGrid.removeAction"/>
+                <button id="createButton" action="programsDataGrid.createAction"/>
+                <button id="editButton" action="programsDataGrid.editAction"/>
+                <button id="excelExportButton" action="programsDataGrid.excelExportAction"/>
+                <button id="removeButton" action="programsDataGrid.removeAction"/>
             </startSlot>
             <endSlot>
-                <simplePagination id="pagination" dataLoader="attendeesDl"/>
+                <simplePagination id="pagination" dataLoader="programsDl"/>
             </endSlot>
         </hbox>
-        <dataGrid id="attendeesDataGrid"
+        <dataGrid id="programsDataGrid"
                   width="100%"
                   minHeight="20em"
-                  dataContainer="attendeesDc"
+                  dataContainer="programsDc"
                   columnReorderingAllowed="true">
             <actions>
                 <action id="createAction" type="list_create"/>
@@ -56,18 +53,11 @@
                 <action id="removeAction" type="list_remove"/>
             </actions>
             <columns resizable="true">
-                <column property="code"/>
-                <column property="birthdate"/>
-                <column property="gender"/>
-                <column property="attendeeType"/>
-                <column property="shirtSize"/>
-                <column property="yearLevel"/>
-                <column property="section"/>
-                <column property="displayName"/>
-                <column property="profilePic"/>
-                <column property="lastName"/>
-                <column property="firstName"/>
-                <column property="middleName"/>
+                <column property="name"/>
+                <column property="type"/>
+                <column property="startDate"/>
+                <column property="endDate"/>
+                <column property="otherDetails"/>
                 <column property="status"/>
             </columns>
         </dataGrid>
