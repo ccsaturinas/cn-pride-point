@@ -161,10 +161,10 @@ public class Attendee {
     @JmixProperty
     @DependsOnProperties({"code", "lastName", "firstName", "middleName"})
     public String getDisplayName() {
-       var ln = lastName == null ? "" : lastName.toUpperCase();
-       var fn = firstName == null ? "" : firstName.toUpperCase();
-       var mi = middleName == null ? "" : middleName.substring(0, 1).toUpperCase();
-       return String.format("%s - %s %s %s.", (code != null ? code : ""), ln, fn, mi).trim();
+        var ln = lastName == null ? "" : lastName.toUpperCase();
+        var fn = firstName == null ? "" : firstName.toUpperCase();
+        var mi = middleName == null || middleName.isEmpty() ? "" : middleName.substring(0, 1).toUpperCase() + ".";
+        return String.format("%s - %s %s %s", (code != null ? code : ""), ln, fn, mi).trim();
     }
 
     @Transient

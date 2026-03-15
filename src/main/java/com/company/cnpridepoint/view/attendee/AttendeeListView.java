@@ -7,9 +7,11 @@ import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.data.renderer.Renderer;
 import com.vaadin.flow.router.Route;
 import io.jmix.core.DataManager;
+import io.jmix.core.querycondition.PropertyCondition;
 import io.jmix.flowui.Notifications;
 import io.jmix.flowui.component.upload.FileUploadField;
 import io.jmix.flowui.kit.component.upload.event.FileUploadSucceededEvent;
+import io.jmix.flowui.model.CollectionLoader;
 import io.jmix.flowui.view.*;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellReference;
@@ -18,8 +20,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.annotation.Nullable;
 import java.io.ByteArrayInputStream;
 import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -36,6 +42,8 @@ public class AttendeeListView extends StandardListView<Attendee> {
     private DataManager dataManager;
     @Autowired
     private Notifications notifications;
+    @ViewComponent
+    private CollectionLoader<Attendee> attendeesDl;
 
     @Supply(to = "attendeesDataGrid.profilePic", subject = "renderer")
     private Renderer<Attendee> attendeesDataGridProfilePicRenderer() {
@@ -43,7 +51,7 @@ public class AttendeeListView extends StandardListView<Attendee> {
             ProfileData profileData = dataManager.create(ProfileData.class);
             profileData.setName(attendee.getDisplayName());
             profileData.setProfilePic(attendee.getProfilePic());
-            return helperServiceBean.getProfileComponent(this,profileData);
+            return helperServiceBean.getProfileComponent(this, profileData);
         });
     }
 
@@ -59,6 +67,9 @@ public class AttendeeListView extends StandardListView<Attendee> {
             return;
         }
 
+        // define the format
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
         List<YearLevel> yrLvls = dataManager.load(YearLevel.class).all().list();
         List<Section> sections = dataManager.load(Section.class).all().list();
 
@@ -66,93 +77,150 @@ public class AttendeeListView extends StandardListView<Attendee> {
 
             Sheet sheet = workbook.getSheetAt(0);
 
+            List<String> errors = new ArrayList<>();
 
 
             for (Row row : sheet) {
                 if (row.getRowNum() == 0) continue; // skip header
+                Attendee attendee = dataManager.create(Attendee.class);
+
+
+                rowLoop:
+                // labeled loop to break
                 for (Cell cell : row) {
-//                    CellReference cellRef = new CellReference(row.getRowNum(), cell.getColumnIndex());
+                    CellReference cellRef = new CellReference(row.getRowNum(), cell.getColumnIndex());
 //                    System.out.print(cellRef.formatAsString());
 //                    System.out.print(" - ");
-                    // get the text that appears in the cell by getting the cell value and applying any data formats (Date, 0.00, 1.23e9, $1.23, etc)
+                    // get the text that appears in the cell by getting the cell value and applying any data formats (Date, 0.00, 1.23e9, $1.23, etc.)
 //                    String text = formatter.formatCellValue(cell);
 //                    System.out.println(text);
                     // Alternatively, get the value and format it yourself
                     var cellType = cell.getCellType();
+                    var cellStringValue = "";
                     switch (cellType) {
                         case STRING:
-                            System.out.println(cell.getRichStringCellValue().getString());
+                            cellStringValue = cell.getStringCellValue();
                             break;
                         case NUMERIC:
                             if (DateUtil.isCellDateFormatted(cell)) {
-                                System.out.println(cell.getDateCellValue());
+                                // Convert java.util.Date to LocalDate
+                                LocalDate date = cell.getDateCellValue()
+                                        .toInstant()
+                                        .atZone(ZoneId.systemDefault())
+                                        .toLocalDate();
+
+                                cellStringValue = date.format(dateFormatter);
                             } else {
-                                System.out.println(cell.getNumericCellValue());
+                                DataFormatter formatter = new DataFormatter();
+                                cellStringValue = formatter.formatCellValue(cell);
                             }
                             break;
                         case BOOLEAN:
-                            System.out.println(cell.getBooleanCellValue());
+                            cellStringValue = String.valueOf(cell.getBooleanCellValue());
                             break;
                         case FORMULA:
-                            System.out.println(cell.getCellFormula());
+                            cellStringValue = cell.getStringCellValue();
                             break;
                         case BLANK:
-                            System.out.println();
                             break;
                         default:
                             System.out.println();
                     }
+
+
+                    try {
+                        var columnIndex = cell.getColumnIndex();
+                        switch (columnIndex) {
+                            case 0:
+                                if (cellStringValue.isEmpty()) {
+                                    break rowLoop;
+                                }
+                                Attendee dbAttendee = findAttendee(cellStringValue);
+                                if (dbAttendee == null) {
+                                    attendee.setCode(cellStringValue);
+                                } else {
+                                    attendee = dbAttendee;
+                                }
+                            case 1:
+                                attendee.setLastName(cellStringValue);
+                                break;
+                            case 2:
+                                attendee.setFirstName(cellStringValue);
+                                break;
+                            case 3:
+                                attendee.setMiddleName(cellStringValue);
+                                break;
+                            case 4:
+                                attendee.setShirtSize(ShirtSize.fromId(cellStringValue));
+                                break;
+                            case 5:
+                                if (!cellStringValue.isEmpty()) {
+                                    attendee.setBirthdate(LocalDate.parse(cellStringValue, dateFormatter));
+                                }
+                                break;
+                            case 6:
+                                attendee.setGender(Gender.fromId(cellStringValue));
+                                break;
+                            case 7:
+                                attendee.setAttendeeType(AttendeeType.fromId(cellStringValue));
+                                break;
+                            case 8:
+                                attendee.setStatus(Status.fromId(cellStringValue));
+                                break;
+                            case 9:
+                                if (!cellStringValue.isEmpty()) {
+                                    String finalCellStringValue = cellStringValue;
+                                    YearLevel matchedYearLevel = yrLvls.stream()
+                                            .filter(yl -> yl.getName().equals(finalCellStringValue))
+                                            .findFirst().orElse(null);
+                                    attendee.setYearLevel(matchedYearLevel);
+                                }
+                                break;
+                            case 10:
+                                if (!cellStringValue.isEmpty()) {
+                                    String finalCellStringValue = cellStringValue;
+                                    Section matchedSection = sections.stream()
+                                            .filter(yl -> yl.getName().equals(finalCellStringValue))
+                                            .findFirst().orElse(null);
+                                    attendee.setSection(matchedSection);
+                                }
+                                break;
+                            default:
+                                System.out.println();
+                        }
+                    } catch (Exception e) {
+                        errors.add("Row " + (row.getRowNum() + 1) + ": " + cellRef.formatAsString() + 1 + ": " + e.getMessage());
+
+                    }
                 }
 
 
+                if (attendee.getCode() == null) {
+                    errors.add("Row " + (row.getRowNum() + 1) + ": " + "Missing code field");
+                } else {
+                    dataManager.save(attendee);
+                    attendeesDl.load();
+                }
+            }
 
-//                Number code = row.getCell(0) == null ? null :  row.getCell(0).getNumericCellValue();
-//                String lastName = row.getCell(1) == null ? null :  row.getCell(1).getStringCellValue();
-//                String firstName = row.getCell(2) == null ? null :  row.getCell(2).getStringCellValue();
-//                String middleName = row.getCell(3) == null ? null :   row.getCell(3).getStringCellValue();
-//                String birthDate =row.getCell(4) == null ? null :   row.getCell(4).getStringCellValue();
-//                String gender = row.getCell(5) == null ? null :  row.getCell(5).getStringCellValue();
-//                String attendeeType = row.getCell(6) == null ? null :  row.getCell(6).getStringCellValue();
-//                String shirt =row.getCell(7) == null ? null :   row.getCell(7).getStringCellValue();
-//                String status = row.getCell(8) == null ? null :  row.getCell(8).getStringCellValue();
-//                String yearLevelName =row.getCell(9) == null ? null :   row.getCell(9).getStringCellValue();
-//                String sectionName = row.getCell(10) == null ? null :  row.getCell(10).getStringCellValue();
-//
-//                YearLevel yrLvl = yrLvls.stream()
-//                        .filter(y -> y.getName().equalsIgnoreCase(yearLevelName))
-//                        .findFirst()
-//                        .orElse(null);
-//
-//                Section section = sections.stream()
-//                        .filter(y -> y.getName().equalsIgnoreCase(sectionName))
-//                        .findFirst()
-//                        .orElse(null);
-//
-//                Attendee attendee = dataManager.create(Attendee.class);
-//                attendee.setCode(code == null ? null : code.toString());
-//                attendee.setLastName(lastName);
-//                attendee.setFirstName(firstName);
-//                attendee.setMiddleName(middleName);
-//                if (birthDate != null) {
-//                    attendee.setBirthdate(LocalDate.parse(birthDate));
-//                }
-//                attendee.setGender(Gender.fromId(gender));
-//                attendee.setAttendeeType(AttendeeType.fromId(attendeeType));
-//                attendee.setShirtSize(ShirtSize.fromId(shirt));
-//                attendee.setStatus(Status.fromId(status));
-//                attendee.setYearLevel(yrLvl);
-//                attendee.setSection(section);
-//
-//                dataManager.save(attendee);
+            if (!errors.isEmpty()) {
+                for (String error : errors) {
+                    notifications.create(error).withType(Notifications.Type.ERROR).show();
+                }
             }
 
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             notifications.create(e.getMessage()).withType(Notifications.Type.ERROR).show();
         }
+        notifications.create("Update Completed").withType(Notifications.Type.SUCCESS).show();
     }
 
-
+    private @Nullable Attendee findAttendee(String value) {
+        return dataManager.load(Attendee.class)
+                .condition(PropertyCondition.equal("code", value))
+                .optional().orElse(null);
+    }
 
 
 }
