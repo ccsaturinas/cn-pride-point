@@ -1,5 +1,8 @@
 package com.company.cnpridepoint.security;
 
+import com.company.cnpridepoint.entity.User;
+import io.jmix.authserver.service.mapper.DefaultOAuth2TokenUserMixin;
+import io.jmix.authserver.service.mapper.JdbcOAuth2AuthorizationServiceObjectMapperCustomizer;
 import io.jmix.core.JmixSecurityFilterChainOrder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -45,5 +48,12 @@ public class CnPridePointSecurityConfiguration {
                 );
 
         return http.build();
+    }
+
+
+    @Bean
+    public JdbcOAuth2AuthorizationServiceObjectMapperCustomizer tokenObjectMapperCustomizer() {
+        return objectMapper ->
+                objectMapper.addMixIn(User.class, DefaultOAuth2TokenUserMixin.class);
     }
 }
