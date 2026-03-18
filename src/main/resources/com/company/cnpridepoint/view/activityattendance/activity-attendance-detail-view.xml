@@ -99,23 +99,23 @@
             </responsiveSteps>
             <entityComboBox id="programField" itemsContainer="programsDc" property="program">
                 <actions>
-<!--                    <action id="entityLookupAction" type="entity_lookup"/>-->
+                    <!--                    <action id="entityLookupAction" type="entity_lookup"/>-->
                     <action id="entityClearAction" type="entity_clear"/>
                 </actions>
             </entityComboBox>
             <entityComboBox id="activityField" itemsContainer="activitiesDc" property="activity">
                 <actions>
-<!--                    <action id="entityLookupAction" type="entity_lookup"/>-->
+                    <!--                    <action id="entityLookupAction" type="entity_lookup"/>-->
                     <action id="entityClearAction" type="entity_clear"/>
                 </actions>
             </entityComboBox>
             <dateTimePicker id="checkedInAtField" property="checkedInAt"/>
             <dateTimePicker id="checkedOutAtField" property="checkedOutAt"/>
             <entityComboBox id="attendeeField" width="100%"
-                          itemsContainer="attendeesDc"
-                          dataContainer="activityAttendanceDc" property="attendee">
+                            itemsContainer="attendeesDc"
+                            dataContainer="activityAttendanceDc" property="attendee">
                 <actions>
-<!--                    <action id="entityLookupAction" type="entity_lookup"/>-->
+                    <!--                    <action id="entityLookupAction" type="entity_lookup"/>-->
                     <action id="entityClearAction" type="entity_clear"/>
                 </actions>
             </entityComboBox>
@@ -129,10 +129,10 @@
             </hbox>
             <hbox spacing="true" margin="false" padding="false" width="100%">
                 <entityComboBox id="yearLevelField" width="100%" itemsContainer="yearLevelsDc"
-                              label="msg://com.company.cnpridepoint.entity/ActivityAttendance.yearLevel"
-                              dataContainer="activityAttendanceDc" property="yearLevel">
+                                label="msg://com.company.cnpridepoint.entity/ActivityAttendance.yearLevel"
+                                dataContainer="activityAttendanceDc" property="yearLevel">
                     <actions>
-<!--                        <action id="entityLookupAction" type="entity_lookup"/>-->
+                        <!--                        <action id="entityLookupAction" type="entity_lookup"/>-->
                         <action id="entityClearAction" type="entity_clear"/>
                     </actions>
                 </entityComboBox>
@@ -140,13 +140,12 @@
                                 label="msg://com.company.cnpridepoint.entity/ActivityAttendance.section"
                                 dataContainer="activityAttendanceDc" property="section">
                     <actions>
-<!--                        <action id="entityLookupAction" type="entity_lookup"/>-->
+                        <!--                        <action id="entityLookupAction" type="entity_lookup"/>-->
                         <action id="entityClearAction" type="entity_clear"/>
                     </actions>
                 </entityComboBox>
-
             </hbox>
-
+            <textArea id="notesField" property="notes"/>
         </formLayout>
         <hbox id="detailActions">
             <button id="saveAndCloseButton" action="saveCloseAction"/>

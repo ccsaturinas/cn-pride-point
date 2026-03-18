@@ -100,6 +100,18 @@ public class ActivityAttendance {
     @Column(name = "STATUS")
     private String status;
 
+    @Column(name = "NOTES")
+    @Lob
+    private String notes;
+
+    public String getNotes() {
+        return notes;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
+    }
+
     public AttendeeType getAttendeeType() {
         return attendeeType == null ? null : AttendeeType.fromId(attendeeType);
     }
