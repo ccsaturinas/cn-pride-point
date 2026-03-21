@@ -104,6 +104,17 @@ public class ActivityAttendance {
     @Lob
     private String notes;
 
+    @Column(name = "MOBILE_REFERENCE")
+    private String mobileReference;
+
+    public String getMobileReference() {
+        return mobileReference;
+    }
+
+    public void setMobileReference(String mobileReference) {
+        this.mobileReference = mobileReference;
+    }
+
     public String getNotes() {
         return notes;
     }

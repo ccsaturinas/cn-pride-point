@@ -146,6 +146,7 @@
                 </entityComboBox>
             </hbox>
             <textArea id="notesField" property="notes"/>
+            <textField id="mobileReferenceField" property="mobileReference"/>
         </formLayout>
         <hbox id="detailActions">
             <button id="saveAndCloseButton" action="saveCloseAction"/>
