@@ -91,14 +91,12 @@ public class AttendanceSyncController {
                     activityAttendance.setSection(attendee.getSection());
                 }
 
-                if (activityAttendance.getId() == null) {
-                    activityAttendance.setId(UUID.randomUUID());
-                }
-
                 try {
-//                    dataManager.save(activityAttendance);
-                    hasErrors = true;
+                    activityAttendance.setId(UUID.randomUUID());
+                    dataManager.save(activityAttendance);
+                    
                 } catch (Exception e) {
+                    activityAttendance.setId(null);
                     hasErrors = true;
                     var notes = activityAttendance.getNotes() == null ? "" : activityAttendance.getNotes() + "\n";
                     activityAttendance.setNotes(notes + e.getLocalizedMessage());
