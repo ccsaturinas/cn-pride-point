@@ -11,9 +11,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.boot.context.event.ApplicationStartedEvent;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
+import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
 import org.springframework.context.event.EventListener;
@@ -25,7 +26,8 @@ import javax.sql.DataSource;
 @Theme(value = "cn-pride-point")
 @PWA(name = "Cn Pride Point", shortName = "Cn Pride Point", offline = false)
 @SpringBootApplication
-public class CnPridePointApplication implements AppShellConfigurator {
+public class CnPridePointApplication
+        extends SpringBootServletInitializer implements AppShellConfigurator {
 
     @Autowired
     private Environment environment;
