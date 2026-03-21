@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<view xmlns="http://jmix.io/schema/flowui/view"
+      xmlns:c="http://jmix.io/schema/flowui/jpql-condition"
+      title="msg://attendeeDetailView.title"
+      focusComponent="form">
+    <data>
+        <instance id="attendeeDc"
+                  class="com.company.cnpridepoint.entity.Attendee">
+            <fetchPlan extends="_base">
+                <property name="yearLevel" fetchPlan="_base"/>
+                <property name="section" fetchPlan="_base"/>
+            </fetchPlan>
+            <loader id="attendeeDl"/>
+        </instance>
+        <collection id="yearLevelsDc" class="com.company.cnpridepoint.entity.YearLevel">
+            <fetchPlan extends="_base"/>
+            <loader id="yearLevelsDl">
+                <query>
+                    <![CDATA[select e from YearLevel e]]>
+                    <condition>
+                        <c:jpql>
+                            <c:where>e.status = :status</c:where>
+                        </c:jpql>
+                    </condition>
+                </query>
+            </loader>
+        </collection>
+        <collection id="sectionsDc" class="com.company.cnpridepoint.entity.Section">
+            <fetchPlan extends="_base"/>
+            <loader id="sectionsDl">
+                <query>
+                    <![CDATA[select e from Section_ e]]>
+                    <condition>
+                        <c:jpql>
+                            <c:where>e.status = :status</c:where>
+                        </c:jpql>
+                    </condition>
+                </query>
+            </loader>
+        </collection>
+    </data>
+    <facets>
+        <dataLoadCoordinator auto="true"/>
+    </facets>
+    <actions>
+        <action id="saveCloseAction" type="detail_saveClose"/>
+        <action id="closeAction" type="detail_close" shortcutCombination="ESCAPE"/>
+    </actions>
+    <layout>
+        <formLayout id="form" dataContainer="attendeeDc">
+            <responsiveSteps>
+                <responsiveStep minWidth="0" columns="1"/>
+                <responsiveStep minWidth="40em" columns="2"/>
+            </responsiveSteps>
+            <hbox spacing="true" margin="false" padding="false" width="100%">
+                <select id="attendeeTypeField" width="100%"
+                        label="msg://com.company.cnpridepoint.entity/AttendeeType"
+                        dataContainer="attendeeDc" property="attendeeType"/>
+                <textField id="codeField" width="100%"
+                           label="msg://com.company.cnpridepoint.entity/Attendee.code"
+                           dataContainer="attendeeDc" property="code"/>
+            </hbox>
+            <textField id="lastNameField" property="lastName"/>
+            <textField id="firstNameField" property="firstName"/>
+            <textField id="middleNameField" property="middleName"/>
+            <select id="genderField" width="100%"
+                    dataContainer="attendeeDc" property="gender"/>
+            <hbox spacing="true" margin="false" padding="false" width="100%">
+                <datePicker id="birthdateField" width="100%"
+                            label="msg://com.company.cnpridepoint.entity/Attendee.birthdate"
+                            dataContainer="attendeeDc" property="birthdate"/>
+                <textField id="ageField" width="100%" readOnly="true"
+                           label="msg://com.company.cnpridepoint.entity/Attendee.age"
+                           dataContainer="attendeeDc" property="age"/>
+            </hbox>
+            <hbox spacing="true" margin="false" padding="false" width="100%">
+                <entityComboBox id="yearLevelField" width="100%" itemsContainer="yearLevelsDc"
+                                label="msg://com.company.cnpridepoint.entity/Attendee.yearLevel"
+                                dataContainer="attendeeDc" property="yearLevel">
+                    <actions>
+                        <!--                        <action id="entityLookupAction" type="entity_lookup"/>-->
+                        <action id="entityClearAction" type="entity_clear"/>
+                    </actions>
+                </entityComboBox>
+                <entityComboBox id="sectionField" width="100%" itemsContainer="sectionsDc"
+                                label="msg://com.company.cnpridepoint.entity/Attendee.section"
+                                dataContainer="attendeeDc" property="section">
+                    <actions>
+                        <!--                        <action id="entityLookupAction" type="entity_lookup"/>-->
+                        <action id="entityClearAction" type="entity_clear"/>
+                    </actions>
+                </entityComboBox>
+            </hbox>
+            <hbox spacing="true" margin="false" padding="false" width="100%">
+                <select id="shirtSizeField" width="100%"
+                        label="msg://com.company.cnpridepoint.entity/Attendee.shirtSize"
+                        dataContainer="attendeeDc" property="shirtSize"/>
+                <select id="statusField" width="100%"
+                        label="msg://com.company.cnpridepoint.entity/Attendee.status"
+                        dataContainer="attendeeDc" property="status"/>
+            </hbox>
+            <vbox spacing="false" margin="false" padding="false">
+                <hbox spacing="true" margin="false" padding="false" alignItems="CENTER">
+                    <h5 text="msg://com.company.cnpridepoint.entity/Attendee.profilePic"/>
+                    <fileStorageUploadField id="profilePicField" fileStoragePutMode="MANUAL"
+                                            dataContainer="attendeeDc" property="profilePic"/>
+                </hbox>
+                <image id="profilePicImage" dataContainer="attendeeDc" property="profilePic"
+                       height="20em" width="20em" themeNames="contain" alignSelf="CENTER"
+                       whiteSpace="PRE_WRAP"/>
+            </vbox>
+        </formLayout>
+        <hbox id="detailActions">
+            <button id="saveAndCloseButton" action="saveCloseAction"/>
+            <button id="closeButton" action="closeAction"/>
+        </hbox>
+    </layout>
+</view>

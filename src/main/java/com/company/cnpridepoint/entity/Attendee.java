@@ -1,6 +1,7 @@
 package com.company.cnpridepoint.entity;
 
 import io.jmix.core.DeletePolicy;
+import io.jmix.core.FileRef;
 import io.jmix.core.annotation.DeletedBy;
 import io.jmix.core.annotation.DeletedDate;
 import io.jmix.core.entity.annotation.JmixGeneratedValue;
@@ -17,6 +18,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
+import java.time.Period;
 import java.util.UUID;
 
 @JmixEntity
@@ -62,8 +64,14 @@ public class Attendee {
     @Column(name = "CODE")
     private String code;
 
-    @Column(name = "NAME")
-    private String name;
+    @Column(name = "LAST_NAME")
+    private String lastName;
+
+    @Column(name = "FIRST_NAME")
+    private String firstName;
+
+    @Column(name = "MIDDLE_NAME")
+    private String middleName;
 
     @Column(name = "BIRTHDATE")
     private LocalDate birthdate;
@@ -85,6 +93,28 @@ public class Attendee {
     @JoinColumn(name = "SECTION_ID")
     @ManyToOne(fetch = FetchType.LAZY)
     private Section section;
+
+    @Column(name = "PROFILE_PIC", length = 1024)
+    private FileRef profilePic;
+
+    @Column(name = "STATUS")
+    private String status;
+
+    public Status getStatus() {
+        return status == null ? null : Status.fromId(status);
+    }
+
+    public void setStatus(Status status) {
+        this.status = status == null ? null : status.getId();
+    }
+
+    public FileRef getProfilePic() {
+        return profilePic;
+    }
+
+    public void setProfilePic(FileRef profilePic) {
+        this.profilePic = profilePic;
+    }
 
     public Gender getGender() {
         return gender == null ? null : Gender.fromId(gender);
@@ -129,10 +159,23 @@ public class Attendee {
 
     @InstanceName
     @JmixProperty
-    @DependsOnProperties({"code", "name"})
+    @DependsOnProperties({"code", "lastName", "firstName", "middleName"})
     public String getDisplayName() {
-        return String.format("%s %s", (code != null ? code : ""),
-                (name != null ? name : "")).trim();
+        var ln = lastName == null ? "" : lastName.toUpperCase();
+        var fn = firstName == null ? "" : firstName.toUpperCase();
+        var mi = middleName == null || middleName.isEmpty() ? "" : middleName.substring(0, 1).toUpperCase() + ".";
+        return String.format("%s - %s %s %s", (code != null ? code : ""), ln, fn, mi).trim();
+    }
+
+    @Transient
+    @JmixProperty
+    @DependsOnProperties("birthdate")
+    public Integer getAge() {
+        var dateNow = LocalDate.now();
+        if (birthdate != null) {
+            return Period.between(birthdate, dateNow).getYears();
+        }
+        return 0;
     }
 
     public AttendeeType getAttendeeType() {
@@ -143,12 +186,29 @@ public class Attendee {
         this.attendeeType = attendeeType == null ? null : attendeeType.getId();
     }
 
-    public String getName() {
-        return name;
+
+    public String getMiddleName() {
+        return middleName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setMiddleName(String middleName) {
+        this.middleName = middleName;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
     public String getCode() {

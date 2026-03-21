@@ -5,20 +5,18 @@ import io.jmix.core.metamodel.datatype.EnumClass;
 import org.springframework.lang.Nullable;
 
 
-public enum ActivityType implements EnumClass<String> {
+public enum ProgramType implements EnumClass<String> {
 
-    LECTURE("Lecture"),
-    WORKSHOP("Workshop"),
-    SEMINAR("Seminar"),
-    SPORT("Sport"),
-    FUN_RUN("Fun Run"),
-    TALENT_SHOW("Talent Show"),
-    QUIZ("Quiz"),
+    ACADEMIC("Academic"),
+    SPORTS("Sports"),
+    CULTURAL("Cultural"),
+    SOCIAL("Social"),
+    CONFERENCE("Conference"),
     OTHER("Other");
 
     private final String id;
 
-    ActivityType(String id) {
+    ProgramType(String id) {
         this.id = id;
     }
 
@@ -27,8 +25,8 @@ public enum ActivityType implements EnumClass<String> {
     }
 
     @Nullable
-    public static ActivityType fromId(String id) {
-        for (ActivityType at : ActivityType.values()) {
+    public static ProgramType fromId(String id) {
+        for (ProgramType at : ProgramType.values()) {
             if (at.getId().equals(id)) {
                 return at;
             }

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<view xmlns="http://jmix.io/schema/flowui/view"
+      xmlns:c="http://jmix.io/schema/flowui/jpql-condition"
+      title="msg://yearLevelListView.title"
+      focusComponent="yearLevelsDataGrid">
+    <data>
+        <collection id="yearLevelsDc"
+                    class="com.company.cnpridepoint.entity.YearLevel">
+            <fetchPlan extends="_base"/>
+            <loader id="yearLevelsDl" readOnly="true">
+                <query>
+                    <![CDATA[select e from YearLevel e]]>
+                </query>
+            </loader>
+        </collection>
+    </data>
+    <facets>
+        <dataLoadCoordinator auto="true"/>
+        <urlQueryParameters>
+            <genericFilter component="genericFilter"/>
+            <pagination component="pagination"/>
+        </urlQueryParameters>
+    </facets>
+    <actions>
+        <action id="selectAction" type="lookup_select"/>
+        <action id="discardAction" type="lookup_discard"/>
+    </actions>
+    <layout>
+        <genericFilter id="genericFilter"
+                       dataLoader="yearLevelsDl">
+            <properties include=".*"/>
+        </genericFilter>
+        <hbox id="buttonsPanel" classNames="buttons-panel">
+            <startSlot>
+                <button id="createButton" action="yearLevelsDataGrid.createAction"/>
+                <button id="editButton" action="yearLevelsDataGrid.editAction"/>
+                <button id="excelExportButton" action="yearLevelsDataGrid.excelExportAction"/>
+                <button id="refreshButton" action="yearLevelsDataGrid.refreshAction"/>
+                <button id="removeButton" action="yearLevelsDataGrid.removeAction"/>
+            </startSlot>
+            <endSlot>
+                <simplePagination id="pagination" dataLoader="yearLevelsDl"/>
+            </endSlot>
+        </hbox>
+        <dataGrid id="yearLevelsDataGrid"
+                  width="100%"
+                  minHeight="20em"
+                  dataContainer="yearLevelsDc"
+                  columnReorderingAllowed="true">
+            <actions>
+                <action id="createAction" type="list_create"/>
+                <action id="editAction" type="list_edit"/>
+                <action id="excelExportAction" type="grdexp_excelExport"/>
+                <action id="refreshAction" type="list_refresh"/>
+                <action id="removeAction" type="list_remove"/>
+            </actions>
+            <columns resizable="true">
+                <column property="name"/>
+                <column property="status"/>
+            </columns>
+        </dataGrid>
+        <hbox id="lookupActions" visible="false">
+            <button id="selectButton" action="selectAction"/>
+            <button id="discardButton" action="discardAction"/>
+        </hbox>
+    </layout>
+</view>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<view xmlns="http://jmix.io/schema/flowui/view"
+      title="msg://programDetailView.title"
+      focusComponent="form">
+    <data>
+        <instance id="programDc"
+                  class="com.company.cnpridepoint.entity.Program">
+            <fetchPlan extends="_base"/>
+            <loader id="programDl"/>
+        </instance>
+    </data>
+    <facets>
+        <dataLoadCoordinator auto="true"/>
+    </facets>
+    <actions>
+        <action id="saveCloseAction" type="detail_saveClose"/>
+        <action id="closeAction" type="detail_close"/>
+    </actions>
+    <layout>
+        <formLayout id="form" dataContainer="programDc">
+            <responsiveSteps>
+                <responsiveStep minWidth="0" columns="1"/>
+                <responsiveStep minWidth="40em" columns="2"/>
+            </responsiveSteps>
+            <textField id="nameField" property="name"/>
+            <hbox id="dateBox" spacing="true" margin="false" padding="false" width="100%">
+                <datePicker id="startDateField" width="100%"
+                            label="msg://com.company.cnpridepoint.entity/Program.startDate"
+                            property="startDate" dataContainer="programDc"/>
+                <datePicker id="endDateField" width="100%"
+                            label="msg://com.company.cnpridepoint.entity/Program.endDate"
+                            property="endDate" dataContainer="programDc"/>
+            </hbox>
+            <hbox id="typeBox" spacing="true" margin="false" padding="false" width="100%">
+                <select id="typeField" width="100%"
+                        label="msg://com.company.cnpridepoint.entity/Program.type"
+                        property="type" dataContainer="programDc"/>
+                <select id="statusField" width="100%"
+                        label="msg://com.company.cnpridepoint.entity/Program.status"
+                        property="status" dataContainer="programDc"/>
+            </hbox>
+            <textArea id="otherDetailsField" height="9.5em" property="otherDetails"/>
+        </formLayout>
+        <hbox id="detailActions">
+            <button id="saveAndCloseButton" action="saveCloseAction"/>
+            <button id="closeButton" action="closeAction"/>
+        </hbox>
+    </layout>
+</view>

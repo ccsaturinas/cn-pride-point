@@ -1,6 +1,9 @@
 package com.company.cnpridepoint.view.user;
 
 import com.company.cnpridepoint.entity.User;
+import com.company.cnpridepoint.security.FullViewRole;
+import com.company.cnpridepoint.security.MobileUserRole;
+import com.company.cnpridepoint.security.UiMinimalRole;
 import com.company.cnpridepoint.view.main.MainView;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.notification.Notification;
@@ -8,9 +11,12 @@ import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.router.Route;
 import io.jmix.core.EntityStates;
+import io.jmix.core.UnconstrainedDataManager;
 import io.jmix.flowui.Notifications;
 import io.jmix.flowui.component.textfield.TypedTextField;
 import io.jmix.flowui.view.*;
+import io.jmix.security.role.assignment.RoleAssignmentRoleType;
+import io.jmix.securitydata.entity.RoleAssignmentEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -43,6 +49,8 @@ public class UserDetailView extends StandardDetailView<User> {
     private PasswordEncoder passwordEncoder;
 
     private boolean newEntity;
+    @Autowired
+    private UnconstrainedDataManager unconstrainedDataManager;
 
     @Subscribe
     public void onInit(final InitEvent event) {
@@ -74,9 +82,30 @@ public class UserDetailView extends StandardDetailView<User> {
     @Subscribe
     public void onBeforeSave(final BeforeSaveEvent event) {
         if (entityStates.isNew(getEditedEntity())) {
+            newEntity = true;
             getEditedEntity().setPassword(passwordEncoder.encode(passwordField.getValue()));
 
-            newEntity = true;
+            // Default Role : UiMinimalRole
+            RoleAssignmentEntity roleAssignmentUiMinimalRole = unconstrainedDataManager.create(RoleAssignmentEntity.class);
+            roleAssignmentUiMinimalRole.setUsername(getEditedEntity().getUsername());
+            roleAssignmentUiMinimalRole.setRoleCode(UiMinimalRole.CODE);
+            roleAssignmentUiMinimalRole.setRoleType(RoleAssignmentRoleType.RESOURCE);
+            unconstrainedDataManager.save(roleAssignmentUiMinimalRole);
+
+            // Default Role : FullViewRole
+            RoleAssignmentEntity roleAssignmentFullViewRole = unconstrainedDataManager.create(RoleAssignmentEntity.class);
+            roleAssignmentFullViewRole.setUsername(getEditedEntity().getUsername());
+            roleAssignmentFullViewRole.setRoleCode(FullViewRole.CODE);
+            roleAssignmentFullViewRole.setRoleType(RoleAssignmentRoleType.RESOURCE);
+            unconstrainedDataManager.save(roleAssignmentFullViewRole);
+
+            // Default Role : MobileUserRole
+            RoleAssignmentEntity roleAssignmentMobileUserRole = unconstrainedDataManager.create(RoleAssignmentEntity.class);
+            roleAssignmentMobileUserRole.setUsername(getEditedEntity().getUsername());
+            roleAssignmentMobileUserRole.setRoleCode(MobileUserRole.CODE);
+            roleAssignmentMobileUserRole.setRoleType(RoleAssignmentRoleType.RESOURCE);
+            unconstrainedDataManager.save(roleAssignmentMobileUserRole);
+
         }
     }
 

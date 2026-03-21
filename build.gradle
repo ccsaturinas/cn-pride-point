@@ -1,5 +1,5 @@
 plugins {
-    id 'io.jmix' version '2.7.4'
+    id 'io.jmix' version '2.7.6'
     id 'java'
     id 'org.jetbrains.gradle.plugin.idea-ext' version '1.1.9'
 }
@@ -8,7 +8,7 @@ apply plugin: 'org.springframework.boot'
 apply plugin: 'com.vaadin'
 
 jmix {
-    bomVersion = '2.7.4'
+    bomVersion = '2.7.6'
 }
 
 group = 'com.company'
@@ -36,7 +36,6 @@ dependencies {
     implementation 'io.jmix.appsettings:jmix-appsettings-flowui-starter'
     implementation 'io.jmix.gridexport:jmix-gridexport-flowui-starter'
     implementation 'io.jmix.charts:jmix-charts-flowui-starter'
-    implementation 'io.jmix.fullcalendar:jmix-fullcalendar-flowui-starter'
     implementation 'io.jmix.search:jmix-search-starter'
     implementation 'io.jmix.search:jmix-search-opensearch-starter'
     implementation 'io.jmix.search:jmix-search-flowui-starter'

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<view xmlns="http://jmix.io/schema/flowui/view"
+      title="msg://activityAttendanceListView.title"
+      focusComponent="activityAttendancesDataGrid">
+    <data>
+        <collection id="activityAttendancesDc"
+                    class="com.company.cnpridepoint.entity.ActivityAttendance">
+            <fetchPlan extends="_base">
+                <property name="activity" fetchPlan="_base"/>
+                <property name="attendee" fetchPlan="_base"/>
+                <property name="yearLevel" fetchPlan="_base"/>
+                <property name="section" fetchPlan="_base"/>
+                <property name="program" fetchPlan="_base"/>
+            </fetchPlan>
+            <loader id="activityAttendancesDl" readOnly="true">
+                <query>
+                    <![CDATA[select e from ActivityAttendance e]]>
+                </query>
+            </loader>
+        </collection>
+    </data>
+    <facets>
+        <dataLoadCoordinator auto="true"/>
+        <urlQueryParameters>
+            <genericFilter component="genericFilter"/>
+            <pagination component="pagination"/>
+        </urlQueryParameters>
+    </facets>
+    <actions>
+        <action id="selectAction" type="lookup_select"/>
+        <action id="discardAction" type="lookup_discard"/>
+    </actions>
+    <layout>
+        <genericFilter id="genericFilter"
+                       dataLoader="activityAttendancesDl">
+            <properties include=".*"/>
+        </genericFilter>
+        <hbox id="buttonsPanel" classNames="buttons-panel">
+            <startSlot>
+                <button id="createButton" action="activityAttendancesDataGrid.createAction"/>
+                <button id="editButton" action="activityAttendancesDataGrid.editAction"/>
+                <button id="excelExportButton" action="activityAttendancesDataGrid.excelExportAction"/>
+                <button id="refreshButton" action="activityAttendancesDataGrid.refreshAction"/>
+                <button id="removeButton" action="activityAttendancesDataGrid.removeAction"/>
+            </startSlot>
+            <endSlot>
+                <simplePagination id="pagination" dataLoader="activityAttendancesDl"/>
+                <gridColumnVisibility dataGrid="activityAttendancesDataGrid" icon="vaadin:cog-o" themeNames="icon"/>
+            </endSlot>
+        </hbox>
+        <dataGrid id="activityAttendancesDataGrid"
+                  width="100%"
+                  minHeight="20em"
+                  dataContainer="activityAttendancesDc"
+                  columnReorderingAllowed="true">
+            <actions>
+                <action id="createAction" type="list_create"/>
+                <action id="editAction" type="list_edit"/>
+                <action id="excelExportAction" type="grdexp_excelExport"/>
+                <action id="refreshAction" type="list_refresh"/>
+                <action id="removeAction" type="list_remove"/>
+            </actions>
+            <columns resizable="true">
+                <column property="program" autoWidth="true"/>
+                <column property="activity" autoWidth="true"/>
+                <column property="checkedInAt" autoWidth="true"/>
+                <column property="checkedOutAt" autoWidth="true" visible="false"/>
+                <column property="attendee" autoWidth="true"/>
+                <column property="attendeeType" autoWidth="true"/>
+                <column property="yearLevel" autoWidth="true"/>
+                <column property="section" autoWidth="true"/>
+                <column property="status" autoWidth="true"/>
+                <column property="notes"/>
+                <column property="mobileReference" autoWidth="true" visible="false"/>
+            </columns>
+        </dataGrid>
+        <hbox id="lookupActions" visible="false">
+            <button id="selectButton" action="selectAction"/>
+            <button id="discardButton" action="discardAction"/>
+        </hbox>
+    </layout>
+</view>

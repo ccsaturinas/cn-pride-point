@@ -11,13 +11,14 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 
+import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.util.UUID;
 
 @JmixEntity
-@Table(name = "SECTION_")
-@Entity(name = "Section_")
-public class Section {
+@Table(name = "PROGRAM")
+@Entity
+public class Program {
     @JmixGeneratedValue
     @Column(name = "ID", nullable = false)
     @Id
@@ -55,6 +56,19 @@ public class Section {
     @Column(name = "NAME")
     private String name;
 
+    @Column(name = "TYPE_")
+    private String type;
+
+    @Column(name = "START_DATE")
+    private LocalDate startDate;
+
+    @Column(name = "END_DATE")
+    private LocalDate endDate;
+
+    @Column(name = "OTHER_DETAILS")
+    @Lob
+    private String otherDetails;
+
     @Column(name = "STATUS")
     private String status;
 
@@ -64,6 +78,38 @@ public class Section {
 
     public void setStatus(Status status) {
         this.status = status == null ? null : status.getId();
+    }
+
+    public LocalDate getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(LocalDate endDate) {
+        this.endDate = endDate;
+    }
+
+    public LocalDate getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(LocalDate startDate) {
+        this.startDate = startDate;
+    }
+
+    public String getOtherDetails() {
+        return otherDetails;
+    }
+
+    public void setOtherDetails(String otherDetails) {
+        this.otherDetails = otherDetails;
+    }
+
+    public ProgramType getType() {
+        return type == null ? null : ProgramType.fromId(type);
+    }
+
+    public void setType(ProgramType type) {
+        this.type = type == null ? null : type.getId();
     }
 
     public String getName() {

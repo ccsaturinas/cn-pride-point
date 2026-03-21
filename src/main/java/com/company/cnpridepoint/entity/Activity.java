@@ -65,6 +65,29 @@ public class Activity {
     @Column(name = "ACTIVITY_TYPE")
     private String activityType;
 
+    @Column(name = "STATUS")
+    private String status;
+
+    @Column(name = "DETAILS")
+    @Lob
+    private String details;
+
+    public String getDetails() {
+        return details;
+    }
+
+    public void setDetails(String details) {
+        this.details = details;
+    }
+
+    public Status getStatus() {
+        return status == null ? null : Status.fromId(status);
+    }
+
+    public void setStatus(Status status) {
+        this.status = status == null ? null : status.getId();
+    }
+
     public ActivityType getActivityType() {
         return activityType == null ? null : ActivityType.fromId(activityType);
     }
