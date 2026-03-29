@@ -32,8 +32,6 @@
                         label="msg://com.company.cnpridepoint.entity/Activity.status"
                         dataContainer="activityDc" property="status"/>
             </hbox>
-            <dateTimePicker id="startDateField" property="startDate"/>
-            <dateTimePicker id="endDateField" property="endDate"/>
             <textArea id="detailsField" property="details"/>
         </formLayout>
         <hbox id="detailActions">

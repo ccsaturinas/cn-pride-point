@@ -11,7 +11,6 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 
-import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.util.UUID;
 
@@ -56,12 +55,6 @@ public class Activity {
     @Column(name = "NAME")
     private String name;
 
-    @Column(name = "START_DATE")
-    private LocalDateTime startDate;
-
-    @Column(name = "END_DATE")
-    private LocalDateTime endDate;
-
     @Column(name = "ACTIVITY_TYPE")
     private String activityType;
 
@@ -94,22 +87,6 @@ public class Activity {
 
     public void setActivityType(ActivityType activityType) {
         this.activityType = activityType == null ? null : activityType.getId();
-    }
-
-    public LocalDateTime getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(LocalDateTime endDate) {
-        this.endDate = endDate;
-    }
-
-    public LocalDateTime getStartDate() {
-        return startDate;
-    }
-
-    public void setStartDate(LocalDateTime startDate) {
-        this.startDate = startDate;
     }
 
     public String getName() {

@@ -1,41 +1,27 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<view xmlns="http://jmix.io/schema/flowui/view"
-      xmlns:c="http://jmix.io/schema/flowui/jpql-condition"
+<view xmlns:c="http://jmix.io/schema/flowui/jpql-condition"
+      xmlns="http://jmix.io/schema/flowui/view"
       title="msg://activityAttendanceDetailView.title"
       focusComponent="form">
     <data>
         <instance id="activityAttendanceDc"
                   class="com.company.cnpridepoint.entity.ActivityAttendance">
             <fetchPlan extends="_base">
-                <property name="program" fetchPlan="_base"/>
-                <property name="activity" fetchPlan="_base"/>
                 <property name="attendee" fetchPlan="_base">
                     <property name="yearLevel" fetchPlan="_base"/>
                     <property name="section" fetchPlan="_base"/>
                 </property>
                 <property name="yearLevel" fetchPlan="_base"/>
                 <property name="section" fetchPlan="_base"/>
+                <property name="activitySchedule" fetchPlan="_base"/>
             </fetchPlan>
             <loader id="activityAttendanceDl"/>
         </instance>
-        <collection id="programsDc" class="com.company.cnpridepoint.entity.Program">
+        <collection id="activitySchedulesDc" class="com.company.cnpridepoint.entity.ActivitySchedule">
             <fetchPlan extends="_base"/>
-            <loader id="programsDl">
+            <loader id="activitySchedulesDl">
                 <query>
-                    <![CDATA[select e from Program e]]>
-                    <condition>
-                        <c:jpql>
-                            <c:where>e.status = :status</c:where>
-                        </c:jpql>
-                    </condition>
-                </query>
-            </loader>
-        </collection>
-        <collection id="activitiesDc" class="com.company.cnpridepoint.entity.Activity">
-            <fetchPlan extends="_base"/>
-            <loader id="activitiesDl">
-                <query>
-                    <![CDATA[select e from Activity e]]>
+                    <![CDATA[select e from ActivitySchedule e]]>
                     <condition>
                         <c:jpql>
                             <c:where>e.status = :status</c:where>
@@ -97,20 +83,12 @@
                 <responsiveStep minWidth="0" columns="1"/>
                 <responsiveStep minWidth="40em" columns="2"/>
             </responsiveSteps>
-            <entityComboBox id="programField" itemsContainer="programsDc" property="program">
+            <entityComboBox id="activityScheduleField" property="activitySchedule" itemsContainer="activitySchedulesDc">
                 <actions>
-                    <!--                    <action id="entityLookupAction" type="entity_lookup"/>-->
+                    <action id="entityLookupAction" type="entity_lookup"/>
                     <action id="entityClearAction" type="entity_clear"/>
                 </actions>
             </entityComboBox>
-            <entityComboBox id="activityField" itemsContainer="activitiesDc" property="activity">
-                <actions>
-                    <!--                    <action id="entityLookupAction" type="entity_lookup"/>-->
-                    <action id="entityClearAction" type="entity_clear"/>
-                </actions>
-            </entityComboBox>
-            <dateTimePicker id="checkedInAtField" property="checkedInAt"/>
-            <dateTimePicker id="checkedOutAtField" property="checkedOutAt"/>
             <entityComboBox id="attendeeField" width="100%"
                             itemsContainer="attendeesDc"
                             dataContainer="activityAttendanceDc" property="attendee">
@@ -119,6 +97,8 @@
                     <action id="entityClearAction" type="entity_clear"/>
                 </actions>
             </entityComboBox>
+            <dateTimePicker id="checkedInAtField" property="checkedInAt"/>
+            <dateTimePicker id="checkedOutAtField" property="checkedOutAt"/>
             <hbox spacing="true" margin="false" padding="false" width="100%">
                 <select id="statusField" width="100%"
                         label="msg://com.company.cnpridepoint.entity/ActivityAttendance.status"

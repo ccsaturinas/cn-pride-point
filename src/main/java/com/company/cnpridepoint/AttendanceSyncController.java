@@ -1,6 +1,7 @@
 package com.company.cnpridepoint;
 
 import com.company.cnpridepoint.entity.*;
+import com.company.cnpridepoint.repository.ActivityScheduleRepository;
 import io.jmix.core.DataManager;
 import io.jmix.core.querycondition.PropertyCondition;
 import org.springframework.data.domain.Page;
@@ -11,10 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 @RestController
 @RequestMapping(path = "/attendance")
@@ -27,8 +25,9 @@ public class AttendanceSyncController {
     private final ActivityAttendanceRepository activityAttendanceRepository;
     private final YearLevelRepository yearLevelRepository;
     private final SectionRepository sectionRepository;
+    private final ActivityScheduleRepository activityScheduleRepository;
 
-    public AttendanceSyncController(DataManager dataManager, AttendeeRepository attendeeRepository, ProgramRepository programRepository, ActivityRepository activityRepository, ActivityAttendanceRepository activityAttendanceRepository, YearLevelRepository yearLevelRepository, SectionRepository sectionRepository) {
+    public AttendanceSyncController(DataManager dataManager, AttendeeRepository attendeeRepository, ProgramRepository programRepository, ActivityRepository activityRepository, ActivityAttendanceRepository activityAttendanceRepository, YearLevelRepository yearLevelRepository, SectionRepository sectionRepository, ActivityScheduleRepository activityScheduleRepository) {
         this.dataManager = dataManager;
         this.attendeeRepository = attendeeRepository;
         this.programRepository = programRepository;
@@ -36,6 +35,7 @@ public class AttendanceSyncController {
         this.activityAttendanceRepository = activityAttendanceRepository;
         this.yearLevelRepository = yearLevelRepository;
         this.sectionRepository = sectionRepository;
+        this.activityScheduleRepository = activityScheduleRepository;
     }
 
     @PostMapping("/sync")
@@ -45,8 +45,7 @@ public class AttendanceSyncController {
 
         // 1) basic payload validation (prevents NPE)
         boolean invalidRefs = attendanceList.stream().anyMatch(a ->
-                a.getProgram() == null || a.getProgram().getId() == null
-                        || a.getActivity() == null || a.getActivity().getId() == null
+                a.getActivitySchedule() == null || a.getActivitySchedule().getId() == null
                         || a.getAttendee() == null || a.getAttendee().getId() == null
         );
 
@@ -56,17 +55,14 @@ public class AttendanceSyncController {
 
         var hasErrors = false;
         for (ActivityAttendance activityAttendance : attendanceList) {
-            var program = dataManager.load(Program.class).condition(PropertyCondition.equal("id", activityAttendance.getProgram().getId())).optional().orElse(null);
-            var activity = dataManager.load(Activity.class).condition(PropertyCondition.equal("id", activityAttendance.getActivity().getId())).optional().orElse(null);
+//            var program = dataManager.load(Program.class).condition(PropertyCondition.equal("id", activityAttendance.getProgram().getId())).optional().orElse(null);
+            var activitySchedule = dataManager.load(ActivitySchedule.class).condition(PropertyCondition.equal("id", activityAttendance.getActivitySchedule().getId())).optional().orElse(null);
             var attendee = dataManager.load(Attendee.class).condition(PropertyCondition.equal("id", activityAttendance.getAttendee().getId())).optional().orElse(null);
 
-            if (program == null || activity == null || attendee == null) {
+            if (activitySchedule == null || attendee == null) {
                 hasErrors = true;
                 var invalidFields = "Reference Not Found: ";
-                if (program == null) {
-                    invalidFields += "Program ";
-                }
-                if (activity == null) {
+                if (activitySchedule == null) {
                     invalidFields += " Activity ";
                 }
                 if (attendee == null) {
@@ -75,8 +71,7 @@ public class AttendanceSyncController {
                 activityAttendance.setNotes(invalidFields);
             } else {
                 //TODO: Persist Attendance Sync
-                activityAttendance.setProgram(program);
-                activityAttendance.setActivity(activity);
+                activityAttendance.setActivitySchedule(activitySchedule);
                 activityAttendance.setAttendee(attendee);
 
 
@@ -94,7 +89,7 @@ public class AttendanceSyncController {
                 try {
                     activityAttendance.setId(UUID.randomUUID());
                     dataManager.save(activityAttendance);
-                    
+
                 } catch (Exception e) {
                     activityAttendance.setId(null);
                     hasErrors = true;
@@ -107,7 +102,11 @@ public class AttendanceSyncController {
         }
 
         Map<String, Object> body = new HashMap<>();
-        body.put("attendanceList", attendanceList);
+        List<ActivityAttendanceDto> activityAttendanceList = new ArrayList<>();
+        for (ActivityAttendance activityAttendance : attendanceList) {
+            activityAttendanceList.add(ActivityAttendanceDto.fromEntityActivityAttendance(activityAttendance));
+        }
+        body.put("attendanceList", activityAttendanceList);
         body.put("errors", hasErrors);
 
         return ResponseEntity
@@ -120,11 +119,12 @@ public class AttendanceSyncController {
     public ResponseEntity<Page<Program>> getPrograms(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "50") int size,
-            @RequestParam(defaultValue = "id") String sort,
-            @RequestParam(defaultValue = "ASC") Sort.Direction dir
+            @RequestParam(defaultValue = "startDate") String sort,
+            @RequestParam(defaultValue = "DESC") Sort.Direction dir
     ) {
         PageRequest pageable = PageRequest.of(page, size, Sort.by(dir, sort));
-        Page<Program> result = programRepository.findByStatus(Status.ACTIVE, pageable);
+//        Page<Program> result = programRepository.findByStatus(Status.ACTIVE, pageable);
+        Page<Program> result = programRepository.findAll(pageable);
 
         return ResponseEntity.ok(result);
     }
@@ -133,13 +133,40 @@ public class AttendanceSyncController {
     public ResponseEntity<Page<Activity>> getActivities(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "50") int size,
-            @RequestParam(defaultValue = "id") String sort,
+            @RequestParam(defaultValue = "startDate") String sort,
             @RequestParam(defaultValue = "ASC") Sort.Direction dir
     ) {
         PageRequest pageable = PageRequest.of(page, size, Sort.by(dir, sort));
-        Page<Activity> result = activityRepository.findByStatus(Status.ACTIVE, pageable);
+//        Page<Activity> result = activityRepository.findByStatus(Status.ACTIVE, pageable);
+        Page<Activity> result = activityRepository.findAll(pageable);
 
         return ResponseEntity.ok(result);
+    }
+
+    @GetMapping("/activity-schedules")
+    public ResponseEntity<Page<ActivityScheduleDto>> getActivitySchedules(
+            @RequestParam(required = false) UUID programId,
+            @RequestParam(required = false) UUID activityId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "50") int size,
+            @RequestParam(defaultValue = "startDate") String sort,
+            @RequestParam(defaultValue = "ASC") Sort.Direction dir
+    ) {
+        PageRequest pageable = PageRequest.of(page, size, Sort.by(dir, sort));
+        Page<ActivitySchedule> result;
+        if (programId != null && activityId != null) {
+            result = activityScheduleRepository.findByProgram_IdAndActivity_Id(programId, activityId, pageable);
+        } else if (programId != null) {
+            result = activityScheduleRepository.findByProgram_Id(programId, pageable);
+        } else if (activityId != null) {
+            result = activityScheduleRepository.findByActivity_Id(activityId, pageable);
+        } else {
+            result = activityScheduleRepository.findAll(pageable);
+        }
+
+        Page<ActivityScheduleDto> dtoPage = result.map(ActivityScheduleDto::fromEntityActivitySchedule);
+
+        return ResponseEntity.ok(dtoPage);
     }
 
     @GetMapping("/year-levels")
@@ -189,9 +216,8 @@ public class AttendanceSyncController {
 
 
     @GetMapping("/activity-attendance-list")
-    public ResponseEntity<Page<ActivityAttendance>> getActivityAttendanceList(
-            @RequestParam(required = false) UUID programId,
-            @RequestParam(required = false) UUID activityId,
+    public ResponseEntity<Page<ActivityAttendanceDto>> getActivityAttendanceList(
+            @RequestParam(required = false) UUID activityScheduleId,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "50") int size,
             @RequestParam(defaultValue = "id") String sort,
@@ -201,16 +227,14 @@ public class AttendanceSyncController {
 //        Page<ActivityAttendance> result = activityAttendanceRepository.findAll(pageable);
 
         Page<ActivityAttendance> result;
-        if (programId != null && activityId != null) {
-            result = activityAttendanceRepository.findByProgram_IdAndActivity_Id(programId, activityId, pageable);
-        } else if (programId != null) {
-            result = activityAttendanceRepository.findByProgram_Id(programId, pageable);
-        } else if (activityId != null) {
-            result = activityAttendanceRepository.findByActivity_Id(activityId, pageable);
+        if (activityScheduleId != null) {
+            result = activityAttendanceRepository.findByActivitySchedule_Id(activityScheduleId, pageable);
         } else {
             result = activityAttendanceRepository.findAll(pageable);
         }
-        return ResponseEntity.ok(result);
+
+        Page<ActivityAttendanceDto> dtoPage = result.map(ActivityAttendanceDto::fromEntityActivityAttendance);
+        return ResponseEntity.ok(dtoPage);
     }
 
 }

@@ -15,3 +15,5 @@ JMix
 ```bash
 Command on Windows : ./gradlew "-Pvaadin.productionMode=true" bootWar
 ```
+
+The WAR file is created in the /build/libs folder.

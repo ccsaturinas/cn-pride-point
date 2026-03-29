@@ -22,11 +22,10 @@ import java.util.UUID;
 
 @JmixEntity
 @Table(name = "ACTIVITY_ATTENDANCE", indexes = {
-        @Index(name = "IDX_ACTIVITY_ATTENDANCE_ACTIVITY", columnList = "ACTIVITY_ID"),
         @Index(name = "IDX_ACTIVITY_ATTENDANCE_ATTENDEE", columnList = "ATTENDEE_ID"),
         @Index(name = "IDX_ACTIVITY_ATTENDANCE_YEAR_LEVEL", columnList = "YEAR_LEVEL_ID"),
         @Index(name = "IDX_ACTIVITY_ATTENDANCE_SECTION", columnList = "SECTION_ID"),
-        @Index(name = "IDX_ACTIVITY_ATTENDANCE_PROGRAM", columnList = "PROGRAM_ID")
+        @Index(name = "IDX_ACTIVITY_ATTENDANCE_ACTIVITY_SCHEDULE", columnList = "ACTIVITY_SCHEDULE_ID")
 })
 @Entity
 public class ActivityAttendance {
@@ -63,15 +62,10 @@ public class ActivityAttendance {
     @Column(name = "DELETED_DATE")
     private OffsetDateTime deletedDate;
 
-    @OnDeleteInverse(DeletePolicy.CASCADE)
-    @JoinColumn(name = "PROGRAM_ID")
+    @OnDeleteInverse(DeletePolicy.UNLINK)
+    @JoinColumn(name = "ACTIVITY_SCHEDULE_ID")
     @ManyToOne(fetch = FetchType.LAZY)
-    private Program program;
-
-    @OnDelete(DeletePolicy.UNLINK)
-    @JoinColumn(name = "ACTIVITY_ID")
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Activity activity;
+    private ActivitySchedule activitySchedule;
 
     @Column(name = "CHECKED_IN_AT")
     private LocalDateTime checkedInAt;
@@ -107,6 +101,14 @@ public class ActivityAttendance {
     @Column(name = "MOBILE_REFERENCE")
     private String mobileReference;
 
+    public ActivitySchedule getActivitySchedule() {
+        return activitySchedule;
+    }
+
+    public void setActivitySchedule(ActivitySchedule activitySchedule) {
+        this.activitySchedule = activitySchedule;
+    }
+
     public String getMobileReference() {
         return mobileReference;
     }
@@ -129,14 +131,6 @@ public class ActivityAttendance {
 
     public void setAttendeeType(AttendeeType attendeeType) {
         this.attendeeType = attendeeType == null ? null : attendeeType.getId();
-    }
-
-    public Program getProgram() {
-        return program;
-    }
-
-    public void setProgram(Program program) {
-        this.program = program;
     }
 
     public Section getSection() {
@@ -185,14 +179,6 @@ public class ActivityAttendance {
 
     public void setAttendee(Attendee attendee) {
         this.attendee = attendee;
-    }
-
-    public Activity getActivity() {
-        return activity;
-    }
-
-    public void setActivity(Activity activity) {
-        this.activity = activity;
     }
 
     public OffsetDateTime getDeletedDate() {
@@ -260,10 +246,10 @@ public class ActivityAttendance {
     }
 
     @InstanceName
-    @DependsOnProperties({"program", "activity"})
+    @DependsOnProperties({"activitySchedule", "attendee"})
     public String getInstanceName(MetadataTools metadataTools) {
         return String.format("%s %s",
-                metadataTools.format(program),
-                metadataTools.format(activity));
+                metadataTools.format(activitySchedule),
+                metadataTools.format(attendee));
     }
 }

@@ -6,11 +6,10 @@
         <collection id="activityAttendancesDc"
                     class="com.company.cnpridepoint.entity.ActivityAttendance">
             <fetchPlan extends="_base">
-                <property name="activity" fetchPlan="_base"/>
                 <property name="attendee" fetchPlan="_base"/>
                 <property name="yearLevel" fetchPlan="_base"/>
                 <property name="section" fetchPlan="_base"/>
-                <property name="program" fetchPlan="_base"/>
+                <property name="activitySchedule" fetchPlan="_base"/>
             </fetchPlan>
             <loader id="activityAttendancesDl" readOnly="true">
                 <query>
@@ -61,8 +60,6 @@
                 <action id="removeAction" type="list_remove"/>
             </actions>
             <columns resizable="true">
-                <column property="program" autoWidth="true"/>
-                <column property="activity" autoWidth="true"/>
                 <column property="checkedInAt" autoWidth="true"/>
                 <column property="checkedOutAt" autoWidth="true" visible="false"/>
                 <column property="attendee" autoWidth="true"/>
@@ -72,6 +69,7 @@
                 <column property="status" autoWidth="true"/>
                 <column property="notes"/>
                 <column property="mobileReference" autoWidth="true" visible="false"/>
+                <column property="activitySchedule"/>
             </columns>
         </dataGrid>
         <hbox id="lookupActions" visible="false">

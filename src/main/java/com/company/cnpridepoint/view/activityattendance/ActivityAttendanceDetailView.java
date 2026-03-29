@@ -12,19 +12,22 @@ import io.jmix.flowui.view.*;
 @EditedEntityContainer("activityAttendanceDc")
 public class ActivityAttendanceDetailView extends StandardDetailView<ActivityAttendance> {
     @ViewComponent
-    private CollectionLoader<Program> programsDl;
-    @ViewComponent
-    private CollectionLoader<Activity> activitiesDl;
-    @ViewComponent
     private CollectionLoader<YearLevel> yearLevelsDl;
     @ViewComponent
     private CollectionLoader<Section> sectionsDl;
+    @ViewComponent
+    private CollectionLoader<ActivitySchedule> activitySchedulesDl;
+
+
+    @Subscribe
+    public void onInitEntity(final InitEntityEvent<ActivityAttendance> event) {
+        activitySchedulesDl.setParameter("status", Status.ACTIVE);
+    }
 
     @Subscribe
     public void onInit(final InitEvent event) {
-        programsDl.setParameter("status", Status.ACTIVE);
-        activitiesDl.setParameter("status", Status.ACTIVE);
         yearLevelsDl.setParameter("status", Status.ACTIVE);
         sectionsDl.setParameter("status", Status.ACTIVE);
     }
+
 }

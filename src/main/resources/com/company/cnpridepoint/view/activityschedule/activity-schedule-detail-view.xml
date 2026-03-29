@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<view xmlns="http://jmix.io/schema/flowui/view"
+      title="msg://activityScheduleDetailView.title"
+      focusComponent="form">
+    <data>
+        <instance id="activityScheduleDc"
+                  class="com.company.cnpridepoint.entity.ActivitySchedule">
+            <fetchPlan extends="_base">
+                <property name="attendanceList" fetchPlan="_base"/>
+            </fetchPlan>
+            <loader id="activityScheduleDl"/>
+            <collection id="attendanceListDc" property="attendanceList"/>
+        </instance>
+        <collection id="programsDc" class="com.company.cnpridepoint.entity.Program">
+            <fetchPlan extends="_base"/>
+            <loader id="programsDl"/>
+        </collection>
+        <collection id="activitiesDc" class="com.company.cnpridepoint.entity.Activity">
+            <fetchPlan extends="_base"/>
+            <loader id="activitiesDl"/>
+        </collection>
+    </data>
+    <facets>
+        <dataLoadCoordinator auto="true"/>
+    </facets>
+    <actions>
+        <action id="saveCloseAction" type="detail_saveClose"/>
+        <action id="closeAction" type="detail_close"/>
+    </actions>
+    <layout>
+        <formLayout id="form" dataContainer="activityScheduleDc">
+            <responsiveSteps>
+                <responsiveStep minWidth="0" columns="1"/>
+                <responsiveStep minWidth="40em" columns="2"/>
+            </responsiveSteps>
+            <entityComboBox id="programField" property="program" itemsContainer="programsDc">
+                <actions>
+                    <action id="entityLookupAction" type="entity_lookup"/>
+                    <action id="entityClearAction" type="entity_clear"/>
+                </actions>
+            </entityComboBox>
+            <entityComboBox id="activityField" property="activity" itemsContainer="activitiesDc">
+                <actions>
+                    <action id="entityLookupAction" type="entity_lookup"/>
+                    <action id="entityClearAction" type="entity_clear"/>
+                </actions>
+            </entityComboBox>
+            <dateTimePicker id="startDateField" property="startDate"/>
+            <dateTimePicker id="endDateField" property="endDate"/>
+            <select id="statusField" property="status"/>
+            <textArea id="notesField" height="9.5em" property="notes"/>
+        </formLayout>
+        <vbox id="attendanceBox" spacing="false" padding="false" margin="false" height="100%">
+            <hbox id="attendanceListButtonsPanel" classNames="buttons-panel">
+                <h3 id="attendanceList"
+                    text="msg://com.company.cnpridepoint.view.activityattendance/activityAttendanceListView.title"/>
+                <!--            <button action="attendanceListDataGrid.createAction"/>-->
+                <!--            <button action="attendanceListDataGrid.editAction"/>-->
+                <!--            <button action="attendanceListDataGrid.removeAction"/>-->
+            </hbox>
+            <dataGrid id="attendanceListDataGrid" dataContainer="attendanceListDc" width="100%" height="100%">
+                <!--            <actions>-->
+                <!--                <action id="createAction" type="list_create">-->
+                <!--                    <properties>-->
+                <!--                        <property name="openMode" value="DIALOG"/>-->
+                <!--                    </properties>-->
+                <!--                </action>-->
+                <!--                <action id="editAction" type="list_edit">-->
+                <!--                    <properties>-->
+                <!--                        <property name="openMode" value="DIALOG"/>-->
+                <!--                    </properties>-->
+                <!--                </action>-->
+                <!--                <action id="removeAction" type="list_remove"/>-->
+                <!--            </actions>-->
+                <columns>
+                    <column property="checkedInAt"/>
+                    <column property="checkedOutAt"/>
+                    <column property="attendeeType"/>
+                    <column property="status"/>
+                    <column property="notes"/>
+                    <column property="mobileReference"/>
+                </columns>
+            </dataGrid>
+        </vbox>
+        <hbox id="detailActions">
+            <button id="saveAndCloseButton" action="saveCloseAction"/>
+            <button id="closeButton" action="closeAction"/>
+        </hbox>
+    </layout>
+</view>

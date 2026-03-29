@@ -1,17 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <view xmlns="http://jmix.io/schema/flowui/view"
-      title="msg://activityListView.title"
-      focusComponent="activitiesDataGrid">
+      title="msg://activityScheduleListView.title"
+      focusComponent="activitySchedulesDataGrid">
     <data>
-        <collection id="activitiesDc"
-                    class="com.company.cnpridepoint.entity.Activity">
-            <fetchPlan extends="_base">
-            </fetchPlan>
-            <loader id="activitiesDl" readOnly="true">
-                <query>
-                    <![CDATA[select e from Activity e]]>
-                </query>
-            </loader>
+        <collection id="activitySchedulesDc"
+                    class="com.company.cnpridepoint.entity.ActivitySchedule">
+            <fetchPlan extends="_base"/>
+            <loader id="activitySchedulesDl" readOnly="true"/>
         </collection>
     </data>
     <facets>
@@ -27,40 +22,40 @@
     </actions>
     <layout>
         <genericFilter id="genericFilter"
-                       dataLoader="activitiesDl">
+                       dataLoader="activitySchedulesDl">
             <properties include=".*"/>
         </genericFilter>
         <hbox id="buttonsPanel" classNames="buttons-panel">
             <startSlot>
-                <button id="createButton" action="activitiesDataGrid.createAction"/>
-                <button id="editButton" action="activitiesDataGrid.editAction"/>
-                <button id="excelExportButton" action="activitiesDataGrid.excelExportAction"/>
-                <button id="refreshButton" action="activitiesDataGrid.refreshAction"/>
-                <button id="removeButton" action="activitiesDataGrid.removeAction"/>
+                <button id="createButton" action="activitySchedulesDataGrid.createAction"/>
+                <button id="editButton" action="activitySchedulesDataGrid.editAction"/>
+                <button id="excelExportButton" action="activitySchedulesDataGrid.excelExportAction"/>
+                <button id="removeButton" action="activitySchedulesDataGrid.removeAction"/>
                 <fileUploadField id="importExcel" acceptedFileTypes=".xlsx"/>
             </startSlot>
             <endSlot>
-                <simplePagination id="pagination" dataLoader="activitiesDl"/>
-                <gridColumnVisibility dataGrid="activitiesDataGrid" icon="vaadin:cog-o" themeNames="icon"/>
+                <simplePagination id="pagination" dataLoader="activitySchedulesDl"/>
+                <gridColumnVisibility dataGrid="activitySchedulesDataGrid" icon="vaadin:cog-o" themeNames="icon"/>
             </endSlot>
         </hbox>
-        <dataGrid id="activitiesDataGrid"
+        <dataGrid id="activitySchedulesDataGrid"
                   width="100%"
                   minHeight="20em"
-                  dataContainer="activitiesDc"
+                  dataContainer="activitySchedulesDc"
                   columnReorderingAllowed="true">
             <actions>
                 <action id="createAction" type="list_create"/>
                 <action id="editAction" type="list_edit"/>
                 <action id="excelExportAction" type="grdexp_excelExport"/>
-                <action id="refreshAction" type="list_refresh"/>
                 <action id="removeAction" type="list_remove"/>
             </actions>
             <columns resizable="true">
-                <column property="name" autoWidth="true"/>
-                <column property="activityType" autoWidth="true"/>
-                <column property="status" autoWidth="true"/>
-                <column property="details"/>
+                <column property="program"/>
+                <column property="activity"/>
+                <column property="startDate"/>
+                <column property="endDate"/>
+                <column property="status"/>
+                <column property="notes"/>
             </columns>
         </dataGrid>
         <hbox id="lookupActions" visible="false">
