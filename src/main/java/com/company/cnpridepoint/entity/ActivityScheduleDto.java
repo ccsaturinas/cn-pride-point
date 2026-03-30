@@ -1,6 +1,8 @@
 package com.company.cnpridepoint.entity;
 
+import io.jmix.core.MetadataTools;
 import io.jmix.core.entity.annotation.JmixId;
+import io.jmix.core.metamodel.annotation.DependsOnProperties;
 import io.jmix.core.metamodel.annotation.InstanceName;
 import io.jmix.core.metamodel.annotation.JmixEntity;
 
@@ -93,5 +95,13 @@ public class ActivityScheduleDto {
 
     public void setNotes(String notes) {
         this.notes = notes;
+    }
+
+    @InstanceName
+    @DependsOnProperties({"program", "activity"})
+    public String getInstanceName(MetadataTools metadataTools) {
+        return String.format("%s %s",
+                metadataTools.format(program),
+                metadataTools.format(activity));
     }
 }
