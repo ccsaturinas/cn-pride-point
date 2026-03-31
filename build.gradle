@@ -13,7 +13,13 @@ jmix {
 }
 
 group = 'com.company'
-version = '0.0.1-SNAPSHOT'
+version = '0.0.2'
+processResources {
+    inputs.property "version", project.version
+    filesMatching('**/*.properties') {
+        expand(version: project.version)
+    }
+}
 
 repositories {
     mavenCentral()

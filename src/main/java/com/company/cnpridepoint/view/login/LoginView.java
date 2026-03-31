@@ -1,6 +1,7 @@
 package com.company.cnpridepoint.view.login;
 
 import com.vaadin.flow.component.UI;
+import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.login.AbstractLogin.LoginEvent;
 import com.vaadin.flow.component.login.LoginI18n;
 import com.vaadin.flow.i18n.LocaleChangeEvent;
@@ -58,10 +59,16 @@ public class LoginView extends StandardView implements LocaleChangeObserver {
     @Value("${ui.login.defaultPassword:}")
     private String defaultPassword;
 
+    @Value("${app.version}")
+    private String appVersion;
+    @ViewComponent
+    private NativeLabel appVersionLabel;
+
     @Subscribe
     public void onInit(final InitEvent event) {
         initLocales();
         initDefaultCredentials();
+        appVersionLabel.setText("Version: " + appVersion);
     }
 
     private void initLocales() {

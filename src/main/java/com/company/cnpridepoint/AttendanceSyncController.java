@@ -40,33 +40,44 @@ public class AttendanceSyncController {
 
     @PostMapping("/sync")
     public ResponseEntity<?> submitAttendance(@RequestBody List<ActivityAttendance> attendanceList) {
-//        List<ActivityAttendance> processedAttendanceList = new ArrayList<>();
-//        List<ActivityAttendance> erroredAttendanceList = new ArrayList<>();
-
-        // 1) basic payload validation (prevents NPE)
-        boolean invalidRefs = attendanceList.stream().anyMatch(a ->
-                a.getActivitySchedule() == null || a.getActivitySchedule().getId() == null
-                        || a.getAttendee() == null || a.getAttendee().getId() == null
-        );
-
-        if (invalidRefs) {
-            return ResponseEntity.badRequest().body("Invalid Reference fields: Null or Empty Program, Activity or Attendee");
-        }
-
         var hasErrors = false;
         for (ActivityAttendance activityAttendance : attendanceList) {
-//            var program = dataManager.load(Program.class).condition(PropertyCondition.equal("id", activityAttendance.getProgram().getId())).optional().orElse(null);
-            var activitySchedule = dataManager.load(ActivitySchedule.class).condition(PropertyCondition.equal("id", activityAttendance.getActivitySchedule().getId())).optional().orElse(null);
-            var attendee = dataManager.load(Attendee.class).condition(PropertyCondition.equal("id", activityAttendance.getAttendee().getId())).optional().orElse(null);
+            if (activityAttendance.getId() == null) {
+                hasErrors = true;
+                activityAttendance.setNotes("Error Test : Missing ActivityAttendance Id");
+                continue;
+            }
+            var notes = activityAttendance.getNotes() == null ? "" : activityAttendance.getNotes() + "\n";
+
+            if (activityAttendance.getActivitySchedule() == null || activityAttendance.getActivitySchedule().getId() == null) {
+                hasErrors = true;
+                notes += "NULL Reference field: Activity Schedule\n";
+            }
+
+            if (activityAttendance.getAttendee() == null || activityAttendance.getAttendee().getId() == null) {
+                hasErrors = true;
+                notes += "NULL Reference field: Attendee\n";
+            }
+
+            if (hasErrors) {
+                activityAttendance.setNotes(notes);
+                continue;
+            }
+
+
+            var getActivityScheduleID = activityAttendance.getActivitySchedule().getId();
+            var getAttendeeID = activityAttendance.getAttendee().getId();
+            var activitySchedule = dataManager.load(ActivitySchedule.class).condition(PropertyCondition.equal("id", getActivityScheduleID)).optional().orElse(null);
+            var attendee = dataManager.load(Attendee.class).condition(PropertyCondition.equal("id", getAttendeeID)).optional().orElse(null);
 
             if (activitySchedule == null || attendee == null) {
                 hasErrors = true;
                 var invalidFields = "Reference Not Found: ";
                 if (activitySchedule == null) {
-                    invalidFields += " Activity ";
+                    invalidFields += " Activity Schedule:  " + getActivityScheduleID;
                 }
                 if (attendee == null) {
-                    invalidFields += " Attendee ";
+                    invalidFields += " Attendee:  " + getAttendeeID;
                 }
                 activityAttendance.setNotes(invalidFields);
             } else {
@@ -93,7 +104,6 @@ public class AttendanceSyncController {
                 } catch (Exception e) {
                     activityAttendance.setId(null);
                     hasErrors = true;
-                    var notes = activityAttendance.getNotes() == null ? "" : activityAttendance.getNotes() + "\n";
                     activityAttendance.setNotes(notes + e.getLocalizedMessage());
                 }
 

@@ -3,6 +3,7 @@
       focusComponent="login"
       title="msg://LoginView.title">
     <layout justifyContent="CENTER" alignItems="CENTER" classNames="jmix-login-main-layout">
+        <image id="staticImage" resource="public/images/logo.png" maxWidth="22.5em"/>
         <loginForm id="login"
                    forgotPasswordButtonVisible="false">
             <form title="msg://loginForm.headerTitle"
@@ -16,5 +17,6 @@
                           username="msg://loginForm.errorUsername"
                           password="msg://loginForm.errorPassword"/>
         </loginForm>
+        <nativeLabel id="appVersionLabel" text="Version: 0.0.0.0"/>
     </layout>
 </view>
