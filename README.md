@@ -12,8 +12,16 @@ JMix
 
 ## Deployment
 
+Linux and macOS
+
 ```bash
-Command on Windows : ./gradlew "-Pvaadin.productionMode=true" bootWar
+./gradlew -Pvaadin.productionMode=true bootBuildImage
+```
+
+Command on Windows
+
+```bash
+./gradlew "-Pvaadin.productionMode=true" bootWar
 ```
 
 The WAR file is created in the /build/libs folder.

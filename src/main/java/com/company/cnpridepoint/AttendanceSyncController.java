@@ -42,11 +42,6 @@ public class AttendanceSyncController {
     public ResponseEntity<?> submitAttendance(@RequestBody List<ActivityAttendance> attendanceList) {
         var hasErrors = false;
         for (ActivityAttendance activityAttendance : attendanceList) {
-            if (activityAttendance.getId() == null) {
-                hasErrors = true;
-                activityAttendance.setNotes("Error Test : Missing ActivityAttendance Id");
-                continue;
-            }
             var notes = activityAttendance.getNotes() == null ? "" : activityAttendance.getNotes() + "\n";
 
             if (activityAttendance.getActivitySchedule() == null || activityAttendance.getActivitySchedule().getId() == null) {
